@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<style>
+			
+			body {
+				font-family: sans-serif;
+			}
+		
+			.d-flex {
+				display: flex;
+			}
+			
+			.unit-block {
+				background: linear-gradient(0deg, rgba(163,159,0,1) 0%, rgba(0,0,0,0.32816876750700286) 100%);
+				border: 2px solid yellow;
+				border-radius: 4px;
+				padding : 6px;
+				margin-right: 6px;
+			}
+			
+			.unit-block-img {
+				width: 60px;
+				height: 48px;
+			}
+			
+			.unit-block-text {
+				text-align: center;
+				line-height: 35px;
+				font-weight: bold;
+				height : 35px;
+				font-size: 30px;
+				color: white;
+			}
+		</style>
+		<script>
+			setTimeout(() => {
+			  fetchAll();
+			}, 1000);
+			
+			
+			async function fetchFromFile(allied, sov, target) {
+				const a = await fetch(allied);
+				const s = await fetch(sov);
+				const v = await a.text() || await s.text();
+				document.getElementById(target).innerHTML = v;
+			}
+			
+			
+			function fetchAll() {
+				fetchFromFile('yellow_allieddogs.txt', 'yellow_sovietdogs.txt', '1');
+				fetchFromFile('yellow_grizzlies.txt', 'yellow_rhinos.txt', '2');
+				fetchFromFile('yellow_warfactories.txt', 'yellow_warfactories.txt', '3');
+				fetchFromFile('yellow_oils.txt', 'yellow_oils.txt', '4');
+				fetchFromFile('yellow_mirages.txt', 'yellow_drones.txt', '5');
+				fetchFromFile('yellow_rocketeers.txt', 'yellow_desolators.txt', '6');
+				refreshImgs();
+			}
+			function refreshImgs() {
+				const images = document.getElementsByClassName('unit-block-img');
+				for (let img of images) {
+					img.src = img.src.split('?')[0] + '?t=' + new Date().getTime();
+				}
+			}
+			
+			fetchAll()
+		</script>
+	</head>
+	<body>
+		<div class="d-flex">
+			<div class="unit-block">
+				<img src="yellow_1.png" class="unit-block-img" />
+				<div class="unit-block-text" id="1"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_2.png" class="unit-block-img" />
+				<div class="unit-block-text" id="2"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_3.png" class="unit-block-img" />
+				<div class="unit-block-text" id="3"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_4.png" class="unit-block-img" />
+				<div class="unit-block-text" id="4"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_5.png" class="unit-block-img" />
+				<div class="unit-block-text" id="5"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_6.png" class="unit-block-img" />
+				<div class="unit-block-text" id="6"></div>
+			</div>
+		</div>
+	</body>
+</html>

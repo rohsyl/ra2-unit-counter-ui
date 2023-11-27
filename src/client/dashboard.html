@@ -1,0 +1,165 @@
+<html>
+	<head>
+		<style>
+			
+			body {
+				font-family: sans-serif;
+			}
+			
+			.d-flex {
+				display: flex;
+			}
+			
+			.mb-4 {
+				margin-bottom : 20px;
+			}
+			
+			.unit-block {
+				border-radius: 4px;
+				padding : 6px;
+				margin-right: 6px;
+			}
+			
+			.unit-block-img {
+				width: 60px;
+				height: 48px;
+			}
+			
+			.unit-block-text {
+				text-align: center;
+				line-height: 35px;
+				font-weight: bold;
+				height : 35px;
+				font-size: 30px;
+				color: white;
+			}
+			
+			
+			.money {
+				font-weight: bold;
+				font-size: 50px;
+			}
+			
+			.red .unit-block {
+				background: linear-gradient(0deg, rgba(156,0,0,1) 0%, rgba(0,0,0,0.32816876750700286) 100%);
+				border: 2px solid red;
+			}
+			
+			.yellow .unit-block {
+				background: linear-gradient(0deg, rgba(163,159,0,1) 0%, rgba(0,0,0,0.32816876750700286) 100%);
+				border: 2px solid yellow;
+			
+			}
+		</style>
+		<script>
+			setInterval(() => {
+			
+				refreshImgs();
+			
+				fetchFromFile('red_balance.txt', 'red_balance.txt', 'rmoney');
+				fetchFromFile('yellow_balance.txt', 'yellow_balance.txt', 'ymoney');
+				fetchFromFile('red_name.txt', 'red_name.txt', 'rname');
+				fetchFromFile('yellow_name.txt', 'yellow_name.txt', 'yname');
+				
+				fetchFromFile('red_allieddogs.txt', 'red_sovietdogs.txt', 'r1');
+				fetchFromFile('red_grizzlies.txt', 'red_rhinos.txt', 'r2');
+				fetchFromFile('red_warfactories.txt', 'red_warfactories.txt', 'r3');
+				fetchFromFile('red_oils.txt', 'red_oils.txt', 'r4');
+				fetchFromFile('red_mirages.txt', 'red_drones.txt', 'r5');
+				fetchFromFile('red_rocketeers.txt', 'red_desolators.txt', 'r6');
+				
+				fetchFromFile('yellow_allieddogs.txt', 'yellow_sovietdogs.txt', 'y1');
+				fetchFromFile('yellow_grizzlies.txt', 'yellow_rhinos.txt', 'y2');
+				fetchFromFile('yellow_warfactories.txt', 'yellow_warfactories.txt', 'y3');
+				fetchFromFile('yellow_oils.txt', 'yellow_oils.txt', 'y4');
+				fetchFromFile('yellow_mirages.txt', 'yellow_drones.txt', 'y5');
+				fetchFromFile('yellow_rocketeers.txt', 'yellow_desolators.txt', 'y6');
+			}, 1000);
+			
+			
+			async function fetchFromFile(allied, sov, target) {
+				const a = await fetch(allied);
+				const s = await fetch(sov);
+				const v = await a.text() || await s.text();
+				document.getElementById(target).innerHTML = v;
+			}
+			
+			function refreshImgs() {
+				const images = document.getElementsByClassName('unit-block-img');
+				for (let img of images) {
+					img.src = img.src.split('?')[0] + '?t=' + new Date().getTime();
+				}
+			}
+			
+			
+		</script>
+	</head>
+	<body>
+		
+		<div class="money">
+			<span id="ymoney"></span>
+			-
+			<span id="yname"></span>
+		<div>
+		<div class="d-flex yellow mb-4">
+			<div class="unit-block">
+				<img src="yellow_1.png" class="unit-block-img" />
+				<div class="unit-block-text" id="y1"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_2.png" class="unit-block-img" />
+				<div class="unit-block-text" id="y2"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_3.png" class="unit-block-img" />
+				<div class="unit-block-text" id="y3"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_4.png" class="unit-block-img" />
+				<div class="unit-block-text" id="y4"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_5.png" class="unit-block-img" />
+				<div class="unit-block-text" id="y5"></div>
+			</div>
+			<div class="unit-block">
+				<img src="yellow_6.png" class="unit-block-img" />
+				<div class="unit-block-text" id="y6"></div>
+			</div>
+		</div>
+		
+		
+	
+		<div class="money">
+			<span id="rmoney"></span>
+			-
+			<span id="rname"></span>
+		<div>
+		<div class="d-flex red mb-4">
+			<div class="unit-block">
+				<img src="red_1.png" class="unit-block-img" />
+				<div class="unit-block-text" id="r1"></div>
+			</div>
+			<div class="unit-block">
+				<img src="red_2.png" class="unit-block-img" />
+				<div class="unit-block-text" id="r2"></div>
+			</div>
+			<div class="unit-block">
+				<img src="red_3.png" class="unit-block-img" />
+				<div class="unit-block-text" id="r3"></div>
+			</div>
+			<div class="unit-block">
+				<img src="red_4.png" class="unit-block-img" />
+				<div class="unit-block-text" id="r4"></div>
+			</div>
+			<div class="unit-block">
+				<img src="red_5.png" class="unit-block-img" />
+				<div class="unit-block-text" id="r5"></div>
+			</div>
+			<div class="unit-block">
+				<img src="red_6.png" class="unit-block-img" />
+				<div class="unit-block-text" id="r6"></div>
+			</div>
+		</div>
+	</body>
+</html>
