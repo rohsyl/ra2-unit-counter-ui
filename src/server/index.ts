@@ -27,9 +27,24 @@ app.get('/dashboard', async(req: Request, res: Response) => {
 
 app.get('/playerdata/:color', async(req: Request, res: Response) => {
     const provider = new Ra2ValuesPlayerDataProvider();
-    return res.json(provider.getPlayerData(req.params.color));
+    return res.json({
+        'data': provider.getPlayerData(req.params.color)
+    });
 });
 
+app.get('/metadata', async(req: Request, res: Response) => {
+    const provider = new Ra2ValuesPlayerDataProvider();
+    return res.json({
+        'data': provider.getMetadata()
+    });
+});
+
+app.get('/active-players', async(req: Request, res: Response) => {
+    const provider = new Ra2ValuesPlayerDataProvider();
+    return res.json({
+        'data': provider.getActiveColors()
+    });
+});
 
 app.listen(8080, () => {
     console.log("Server successfully running on port 8080");
