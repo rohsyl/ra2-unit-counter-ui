@@ -1,1 +1,1 @@
-node .\src\server\index.js
+ts-node-esm .\src\server\index.ts
