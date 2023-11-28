@@ -62,11 +62,11 @@ onMounted(() => {
   <div :class="!isSlave ? 'p2' : ''">
 
     <div class="flex justify-between gap-2">
-      <div class="w-1/4">
+      <div class="flex-grow">
         <UnitsCounter :running="gameStore.gameRunning" :player="gameStore.player1" align="end" />
       </div>
 
-      <div class="flex-grow">
+      <div class="w-2/6">
         <div class="text-center">
           <div class="">
             <div class="flex justify-center">
@@ -102,7 +102,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="w-1/4">
+      <div class="flex-grow">
         <UnitsCounter :running="gameStore.gameRunning" :player="gameStore.player2" align="start" />
       </div>
     </div>

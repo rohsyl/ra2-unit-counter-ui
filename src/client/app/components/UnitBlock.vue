@@ -17,10 +17,10 @@ const className: string = props.color && props.color.className
 </script>
 
 <template>
-  <div class="border-4 p-0.5 rounded"
+  <div class="border-4 p-0.5 pb-0 rounded"
        :class="className">
-    <img :src="assets.getUnitImgSrc(unit.name)" :alt="unit.name" style="width: 35px;" class="rounded"/>
-    <p class="text-center text-xl font-bold leading-5">
+    <img :src="assets.getUnitImgSrc(unit.name)" :alt="unit.name" style="width: 65px;" class="rounded"/>
+    <p class="text-center text-3xl font-bold text-white mt-1">
       {{ props.count }}
     </p>
   </div>
