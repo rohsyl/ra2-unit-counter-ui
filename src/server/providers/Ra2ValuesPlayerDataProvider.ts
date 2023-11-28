@@ -1,4 +1,4 @@
-import { DataProvider } from './DataProvider';
+import {DataProvider, PlayerData} from './DataProvider';
 import path from 'path';
 import fs from 'fs';
 
@@ -144,11 +144,15 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         return result
     }
 
-    getActiveColors(): string[] {
-        const result: string[] = [];
+    getActivePlayers(): PlayerData[] {
+        const result: PlayerData[] = [];
         for(const color of this.colors) {
-            if(this.readPlayerData(color, 'name') !== '') {
-                result.push(color);
+            const name = this.readPlayerData(color, 'name');
+            if(name !== '') {
+                result.push({
+                    'name': name,
+                    'color': color,
+                });
             }
         }
 

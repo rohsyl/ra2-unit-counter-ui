@@ -4,6 +4,7 @@ import * as path from 'path';
 
 export default defineConfig({
     root: './src/client/',
+    envDir: '../../',
     publicDir: './public/',
     plugins: [vue()],
     manifest: {

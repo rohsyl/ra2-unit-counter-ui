@@ -4,5 +4,11 @@ export interface DataProvider {
 
     getMetadata(): object;
 
-    getActiveColors(): string[];
+    getActivePlayers(): PlayerData[];
+}
+
+
+export interface PlayerData {
+    name: string,
+    color: string,
 }
