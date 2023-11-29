@@ -34,13 +34,24 @@ const configProvider: ConfigProvider = new ConfigProvider();
 const config = configProvider.get();
 
 const clientBasePath: string = config.client.base_path
+const assetsBasePath: string = clientBasePath + '/assets'
+const assetsDir: string = path.join(clientDir, '/assets');
 
 const app: Express = express();
 app.use(cors())
-//app.use(express.static(path.join(__dirname, '../playerdata')));
 
-app.get(clientBasePath, function(req, res) {
+app.get(assetsBasePath + '/*', function(req, res) {
+    if(!req.url.startsWith(assetsBasePath)) {
+        return res.status(404).send('Not found');
+    }
+    const filepath = req.url.slice(assetsBasePath.length);
+    if(!fs.existsSync(path.join(assetsDir, filepath))) {
+        return res.status(404).send('Not found');
+    }
+    res.sendFile(path.join(assetsDir, filepath));
+});
 
+app.get([clientBasePath, clientBasePath + '/*'], function(req, res) {
     const filePath = path.join(clientDir, '/index.html');
     const fileContent = fs.readFileSync(filePath).toString()
     const html= ejs.render(fileContent, {
@@ -52,18 +63,6 @@ app.get(clientBasePath, function(req, res) {
     res.send(
         html
     )
-    //res.sendFile(path.join(__dirname, '/dist/client/index.html'));
-
-});
-app.get(clientBasePath + '/*', function(req, res) {
-    if(!req.url.startsWith(clientBasePath)) {
-        return res.status(404).send('Not found');
-    }
-    const filepath = req.url.slice(clientBasePath.length);
-    if(!fs.existsSync(path.join(clientDir, filepath))) {
-        return res.status(404).send('Not found');
-    }
-    res.sendFile(path.join(clientDir, filepath));
 });
 
 app.get('/playerdata/:color', async(req: Request, res: Response) => {
@@ -107,7 +106,7 @@ app.get('/active-players', async(req: Request, res: Response) => {
 
 const server = app.listen(config.server.port, () => {
     console.log("Server successfully running on port " + config.server.port);
-  });
-
+    console.log("    Open : http://" + config.server.hostname + ":" + config.server.port + clientBasePath + " in your browser");
+});
 
 websockets(server)
