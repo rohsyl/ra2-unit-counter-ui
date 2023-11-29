@@ -7,25 +7,31 @@ import websockets from './websockets';
 import {PlayerData} from "./providers/DataProvider";
 import fs from "fs";
 import ejs from "ejs";
-import config from './config';
+import ConfigProvider from "./config";
 
 interface Process extends NodeJS.Process {
     pkg: any;
 }
 declare const process: Process;
 
+const appDir: string = __dirname;
+let clientDir: string;
 let dotEnvPath: string;
 if(process.pkg) {
-   dotEnvPath = path.join(process.cwd(), '/../.env');
+    dotEnvPath = path.join(process.cwd(), '/.env');
+    clientDir = path.join(appDir, '/../client');
 }
 else {
-    dotEnvPath = path.join(process.cwd(), '/.env');
+    dotEnvPath = path.join(__dirname, '../../.env');
+    clientDir = path.join(__dirname, '../../dist/client');
 }
-console.log(dotEnvPath)
 
 dotenv.config({
     path: dotEnvPath
 });
+
+const configProvider: ConfigProvider = new ConfigProvider();
+const config = configProvider.get();
 
 const clientBasePath: string = config.client.base_path
 
@@ -35,7 +41,7 @@ app.use(cors())
 
 app.get(clientBasePath, function(req, res) {
 
-    const filePath = path.join(process.cwd(), '/dist/client/index.html');
+    const filePath = path.join(clientDir, '/index.html');
     const fileContent = fs.readFileSync(filePath).toString()
     const html= ejs.render(fileContent, {
         hostname: config.server.hostname,
@@ -46,7 +52,7 @@ app.get(clientBasePath, function(req, res) {
     res.send(
         html
     )
-    //res.sendFile(path.join(process.cwd(), '/dist/client/index.html'));
+    //res.sendFile(path.join(__dirname, '/dist/client/index.html'));
 
 });
 app.get(clientBasePath + '/*', function(req, res) {
@@ -54,10 +60,10 @@ app.get(clientBasePath + '/*', function(req, res) {
         return res.status(404).send('Not found');
     }
     const filepath = req.url.slice(clientBasePath.length);
-    if(!fs.existsSync(path.join(process.cwd(), '/dist/client' + filepath))) {
+    if(!fs.existsSync(path.join(clientDir, filepath))) {
         return res.status(404).send('Not found');
     }
-    res.sendFile(path.join(process.cwd(), '/dist/client' + filepath));
+    res.sendFile(path.join(clientDir, filepath));
 });
 
 app.get('/playerdata/:color', async(req: Request, res: Response) => {
@@ -99,8 +105,8 @@ app.get('/active-players', async(req: Request, res: Response) => {
     });
 });
 
-const server = app.listen(8080, () => {
-    console.log("Server successfully running on port 8080");
+const server = app.listen(config.server.port, () => {
+    console.log("Server successfully running on port " + config.server.port);
   });
 
 

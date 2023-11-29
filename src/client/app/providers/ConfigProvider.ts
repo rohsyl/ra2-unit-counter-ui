@@ -5,14 +5,20 @@ export default class ConfigProvider {
     public static config: Config;
     public static loadConfig(): Config {
 
-        console.log('loadConfig()')
+        let hostname
+        let port
+        let base_path
 
-        // @ts-ignore
-        const hostname = import.meta.env.VITE_HOSTNAME ?? this.getConfigFromMeta('hostname') ?? 'localhost'
-        // @ts-ignore
-        const port = import.meta.env.VITE_PORT ?? this.getConfigFromMeta('port') ?? 8080
-        // @ts-ignore
-        const base_path = import.meta.env.VITE_CLIENT_BASE_PATH ?? this.getConfigFromMeta('base_path') ?? '/ra2'
+        if(import.meta.env.MODE === 'production') {
+            hostname = this.getConfigFromMeta('hostname') ?? 'localhost'
+            port = this.getConfigFromMeta('port') ?? 8080
+            base_path = this.getConfigFromMeta('base_path') ?? '/ra2'
+        }
+        else {
+            hostname = import.meta.env.VITE_HOSTNAME ?? 'localhost'
+            port = import.meta.env.VITE_PORT ?? 8080
+            base_path = import.meta.env.VITE_CLIENT_BASE_PATH ?? '/ra2'
+        }
 
         this.config = {
             'server': {
@@ -30,7 +36,7 @@ export default class ConfigProvider {
     }
 
     private static getConfigFromMeta(key: string): string|undefined|null {
-        const value = document.querySelector('meta[name="a2:' + key + '"]')?.getAttribute('value')
+        const value = document.querySelector('meta[name="ra2:' + key + '"]')?.getAttribute('value')
         if(value === '<%= ' + key.split(':')[1] + ' %>') {
             return null
         }
