@@ -1,9 +1,11 @@
 {
+  "name": "ra2-ui",
   "dependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
     "commonjs": "^0.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0",
@@ -17,9 +19,15 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "npx nodemon ./src/server/index.ts"
+    "start": "npx nodemon ./src/server/index.ts",
+    "clean": "rm -rf ./dist",
+    "prepare-client": "npx vite build",
+    "prepare-server": "npx tsc --outDir ./dist/serverjs -p tsconfig.build.json",
+    "build-pkg": "npx pkg .",
+    "build-all": "npm run prepare-client && npm run prepare-server && npm run build-pkg"
   },
   "devDependencies": {
+    "@types/ejs": "^3.1.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.0",
@@ -27,8 +35,19 @@
     "@types/ws": "^8.5.10",
     "autoprefixer": "^10.4.16",
     "nodemon": "^3.0.1",
+    "pkg": "^5.8.1",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5",
     "ts-node": "^10.9.1"
-  }
+  },
+  "pkg": {
+    "scripts": "./dist/serverjs/**/*.js",
+    "assets": "./dist/client/**/*",
+    "targets": [
+      "node18-win-x64",
+      "node18-linux-x64"
+    ],
+    "outputPath": "./dist/server"
+  },
+  "bin": "./dist/serverjs/index.js"
 }

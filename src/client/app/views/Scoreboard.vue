@@ -9,6 +9,7 @@ import { computed } from 'vue'
 import {storeToRefs} from "pinia";
 import {initFetchValues, useUnitsStore} from "../stores/UnitsStore";
 import {useMetadataStore} from "../stores/MetadataStore";
+import ConfigProvider from "../providers/ConfigProvider";
 
 const route = useRoute()
 const isSlave = ref(true)
@@ -30,7 +31,7 @@ onMounted(() => {
     return
   }
 
-  wsConnection = new WebSocket(import.meta.env.VITE_WS_URL + '?type=slave')
+  wsConnection = new WebSocket(ConfigProvider.config.client.ws_url + '?type=slave')
 
   wsConnection.onopen = () => {
     console.log('Connected to websocket')

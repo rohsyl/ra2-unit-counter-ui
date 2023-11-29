@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import Color from "../models/Color";
 import ColorsProvider from "../providers/ColorsProvider";
+import ConfigProvider from "../providers/ConfigProvider";
 
 export interface Player {
     name: string;
@@ -28,6 +29,7 @@ export const useGameStore = defineStore('game', {
         player1: Player,
         player2: Player,
         gameFormat: string,
+        error?: string,
         gameRunning: boolean,
     } => ({
         player1: {
@@ -40,6 +42,7 @@ export const useGameStore = defineStore('game', {
             color: '',
             score: 0,
         },
+        error: undefined,
         gameFormat: 'BO5',
         gameRunning: false,
     }),
@@ -60,28 +63,42 @@ export const useGameStore = defineStore('game', {
     },
     actions: {
         async fetchIsGameRunning() {
-            const response = await fetch(import.meta.env.VITE_DATA_API_URL + '/active-players');
+            const response = await fetch(ConfigProvider.config.client.api_url + '/active-players');
             const data = (await response.json()).data;
-            this.gameRunning = data.is_game_running;
 
-            if(this.gameRunning) {
-                if(this.player1.color === '') {
-                    let player: any = data.players.find((p: any) => p.name === this.player1.name)
-                    if(player) {
-                        this.player1.color = player.color;
+            if(!response.ok) {
+                this.gameRunning = false;
+
+                if(response.status === 500) {
+                    if(data.message) {
+                        this.error = data.message;
                     }
                 }
-                if(this.player2.color === '') {
-                    let player: any = data.players.find((p: any) => p.name === this.player2.name)
-                    if(player) {
-                        this.player2.color = player.color;
+            }
+            else {
+                this.error = undefined;
+                this.gameRunning = data.is_game_running;
+
+                if(this.gameRunning) {
+                    if(this.player1.color === '') {
+                        let player: any = data.players.find((p: any) => p.name === this.player1.name)
+                        if(player) {
+                            this.player1.color = player.color;
+                        }
+                    }
+                    if(this.player2.color === '') {
+                        let player: any = data.players.find((p: any) => p.name === this.player2.name)
+                        if(player) {
+                            this.player2.color = player.color;
+                        }
                     }
                 }
             }
 
+
         },
         async fetchPlayerUnits(player: Player) {
-            const response = await fetch(import.meta.env.VITE_DATA_API_URL + 'playerdata/' + player.color);
+            const response = await fetch(ConfigProvider.config.client.api_url + 'playerdata/' + player.color);
         }
     },
     persist: true

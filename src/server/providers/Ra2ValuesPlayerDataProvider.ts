@@ -1,4 +1,4 @@
-import {DataProvider, PlayerData} from './DataProvider';
+import {DataProvider, PlayerData, SourceReadyResult} from './DataProvider';
 import path from 'path';
 import fs from 'fs';
 
@@ -125,8 +125,15 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
     }
 
     private readPlayerData(color: string, field: string): string {
+
+        const filePath = path.join(process.env.GAME_DIR as string, 'playerdata', color + '_' + field + '.txt');
+
+        if(!fs.existsSync(filePath)) {
+            return '';
+        }
+
         return fs.readFileSync(
-            path.join(process.env.GAME_DIR as string, 'playerdata', color + '_' + field + '.txt'),
+            filePath,
             'utf8'
         )
     }
@@ -158,4 +165,18 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
 
         return result;
     }
+
+    checkSourceReady(): SourceReadyResult {
+        if (!fs.existsSync(process.env.GAME_DIR as string)) {
+            return {
+                isReady: false,
+                message: 'Game directory not found under : ' + process.env.GAME_DIR,
+            };
+        }
+        return {
+            isReady: true,
+            message: 'Source ready',
+        };
+    }
+
 }

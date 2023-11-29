@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {Player} from "./GameStore";
 import {toRaw} from "vue";
+import ConfigProvider from "../providers/ConfigProvider";
 
 
 export function initFetchValues(unitsStore: any, gameStore: any, player: Player) {
@@ -30,7 +31,7 @@ export const useUnitsStore = defineStore('units', {
     },
     actions: {
         async fetchPlayerValues(player: Player) {
-            const response = await fetch(import.meta.env.VITE_DATA_API_URL + '/playerdata/' + player.color);
+            const response = await fetch(ConfigProvider.config.client.api_url + '/playerdata/' + player.color);
             const data = (await response.json()).data;
             this.$patch({
                 players: {

@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import ConfigProvider from "../providers/ConfigProvider";
 
 export interface Unit {
     name: string;
@@ -101,14 +102,25 @@ export const useMetadataStore = defineStore('metadata', {
     },
     actions: {
         async loadMetadata(): Promise<boolean> {
-            const response = await fetch(import.meta.env.VITE_DATA_API_URL + '/metadata');
+
+
+
+            const response = await fetch(ConfigProvider.config.client.api_url + '/metadata');
             const data = (await response.json()).data;
 
             this.colors = data.colors;
             this.countries = data.countries;
-            this.units = this.units ?? initDefaultUnits(data.units)
 
 
+            const defaults: UnitsContainer = initDefaultUnits(data.units);
+            for (const faction in this.units as UnitsContainer) {
+                if(this.units[faction].length === 0) {
+                    this.units[faction] = defaults[faction];
+                }
+                else {
+                    // todo merge defaults with existing units
+                }
+            }
             return true
         },
     },

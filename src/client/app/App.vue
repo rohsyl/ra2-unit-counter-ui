@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import Nav from './components/Nav.vue'
   import {onMounted, ref} from "vue";
 
   import { useMetadataStore } from "./stores/MetadataStore";

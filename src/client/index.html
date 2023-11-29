@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Red Alert 2 Streamer Dashboard</title>
+    <meta name="ra2:hostname" value="<%= hostname %>">
+    <meta name="ra2:port" value="<%= port %>">
+    <meta name="ra2:base_path" value="<%= base_path %>">
 </head>
 <body>
-    <div id="app">{{ message }}</div>
+    <div id="app" v-cloak>{{ message }}</div>
 
     <script type="module" src="main.ts"></script>
 </body>

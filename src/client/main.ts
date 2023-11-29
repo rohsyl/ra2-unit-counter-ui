@@ -3,13 +3,16 @@ import { createApp, ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import App from '/app/App.vue'
-import routes from '/app/routes.ts'
+// @ts-ignore
+import App from './app/App.vue'
 import '/css/main.css'
+import ConfigProvider from "./app/providers/ConfigProvider";
+ConfigProvider.loadConfig()
+import getRoutes from './app/routes'
 
 const router = createRouter({
     history: createWebHistory(),
-    routes,
+    routes: getRoutes(),
 })
 
 const pinia = createPinia()

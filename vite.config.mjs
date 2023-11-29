@@ -7,10 +7,9 @@ export default defineConfig({
     envDir: '../../',
     publicDir: './public/',
     plugins: [vue()],
-    manifest: {
-        basePath: '../../dist/'
-    },
+    base: '/ra2',
     build: {
-        outDir: '../../dist/'
-    }
+        outDir: '../../dist/client/'
+    },
+    commonjsOptions: { include: [] }
 });
