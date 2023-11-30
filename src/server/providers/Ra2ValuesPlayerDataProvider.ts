@@ -1,6 +1,7 @@
 import {DataProvider, PlayerData, SourceReadyResult} from './DataProvider';
 import path from 'path';
 import fs from 'fs';
+import {Config} from "../config";
 
 export default class Ra2ValuesPlayerDataProvider implements DataProvider{
 
@@ -75,6 +76,11 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         'yuriminers',
     ];
 
+    public config: Config;
+
+    public constructor(config: Config) {
+        this.config = config;
+    }
 
     public getPlayerData(color: string): object {
 
@@ -126,7 +132,8 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
 
     private readPlayerData(color: string, field: string): string {
 
-        const filePath = path.join(process.env.GAME_DIR as string, 'playerdata', color + '_' + field + '.txt');
+        const config: Config = this.config;
+        const filePath = path.join(config.server.game_dir, 'playerdata', color + '_' + field + '.txt');
 
         if(!fs.existsSync(filePath)) {
             return '';
@@ -167,12 +174,30 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
     }
 
     checkSourceReady(): SourceReadyResult {
-        if (!fs.existsSync(process.env.GAME_DIR as string)) {
+        const config: Config = this.config;
+        if (!fs.existsSync(config.server.game_dir)) {
             return {
                 isReady: false,
-                message: 'Game directory not found under : ' + process.env.GAME_DIR,
+                message: 'Game directory not found under : ' + path.resolve(config.server.game_dir),
             };
         }
+
+        const gamePath = path.join(config.server.game_dir, 'gamemd.exe');
+        if(!fs.existsSync(gamePath)) {
+            return {
+                isReady: false,
+                message: 'Game not found in the given directory : ' + path.resolve(gamePath),
+            };
+        }
+
+        const qmPath = path.join(config.server.game_dir, 'Qt', 'CnCNetQM.exe');
+        if(!fs.existsSync(qmPath)) {
+            return {
+                isReady: false,
+                message: 'Game not found in the given directory : ' + path.resolve(qmPath),
+            };
+        }
+
         return {
             isReady: true,
             message: 'Source ready',

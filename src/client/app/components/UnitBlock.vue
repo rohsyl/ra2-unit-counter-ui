@@ -27,7 +27,7 @@ function initDirection() {
     imageWidth = ' w-[60px]'
   }
   else if(props.direction === 'column') {
-    containerDirectionClass += 'bg-gradient-to-l flex-row w-[120px] '
+    containerDirectionClass += 'bg-gradient-to-r flex-row w-[120px] '
     containerTextClass = ' text-right pr-2 text-right flex-grow  '
     imageWidth = ' w-[50px]'
   }

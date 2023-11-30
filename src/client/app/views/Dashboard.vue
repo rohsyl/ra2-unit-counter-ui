@@ -108,45 +108,42 @@ function refreshSlave() {
       </div>
     </div>
 
-
-
-    <div class="flex gap-2 mb-4">
-      <div class="w-1/2">
+    <div class="flex flex-col md:flex-row gap-2 mb-2">
+      <div class="w-full">
         <Card>
           <PlayerControl :player="gameStore.player1" :player-number="'1'" />
         </Card>
       </div>
-      <div class="w-1/2">
+      <div class="w-full">
         <Card>
           <PlayerControl :player="gameStore.player2" :player-number="'2'" />
         </Card>
       </div>
     </div>
 
-    <Card class="mb-4">
-      <h2 class="text-2xl font-bold mb-4 border-b">
-        Game configurations
-      </h2>
-      <div>
-        <div class="mb-2">
+    <Card class="mb-2">
+      <div class="flex gap-2">
+        <div class="w-1/2">
           <InputLabel for="gameFormat">Game format</InputLabel>
           <InputText v-model="gameStore.gameFormat" id="gameFormat" placeholder="Game format" class="w-full"/>
-          <InputHelper>Set the game format here. Can be anything (BO3-5-7, etc...). It will be shown on the scoreboard.</InputHelper>
+          <InputHelper>Set the game format</InputHelper>
         </div>
-        <div class="mt-6">
+        <div class="w-1/2">
           <InputLabel>Actions</InputLabel>
-          <Button @click="resetScore">
-            Reset score
-          </Button>
-          <Button @click="refreshSlave">
-            Force reload scoreboard
-          </Button>
+          <div class="">
+            <Button @click="resetScore" class="mr-2 mt-1">
+              Reset score
+            </Button>
+            <!--<Button @click="refreshSlave" class=" mt-1">
+              Force reload scoreboard
+            </Button>-->
+          </div>
         </div>
       </div>
     </Card>
 
 
-    <Card>
+    <!--<Card>
       <h2 class="text-2xl font-bold mb-2 border-b">
         Units configurations
       </h2>
@@ -164,7 +161,7 @@ function refreshSlave() {
         <img :src="prefix + '/assets/factions/soviet.webp'" alt="Allied" class="inline-block h-6 mb-1" />
       </h4>
       <CheckedUnitPreview :units="getCheckedSovietUnits" :color="ColorsProvider.getColor('red')" class="mb-4" />
-    </Card>
+    </Card>-->
 
   </div>
 </template>

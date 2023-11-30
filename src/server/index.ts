@@ -30,12 +30,16 @@ dotenv.config({
     path: dotEnvPath
 });
 
+
+
 const configProvider: ConfigProvider = new ConfigProvider();
 const config = configProvider.get();
 
 const clientBasePath: string = config.client.base_path
 const assetsBasePath: string = clientBasePath + '/assets'
 const assetsDir: string = path.join(clientDir, '/assets');
+
+console.log("RA2 - UI by wushaolin " + config.version);
 
 const app: Express = express();
 app.use(cors())
@@ -66,21 +70,21 @@ app.get([clientBasePath, clientBasePath + '/*'], function(req, res) {
 });
 
 app.get('/playerdata/:color', async(req: Request, res: Response) => {
-    const provider = new Ra2ValuesPlayerDataProvider();
+    const provider = new Ra2ValuesPlayerDataProvider(config);
     return res.json({
         'data': provider.getPlayerData(req.params.color)
     });
 });
 
 app.get('/metadata', async(req: Request, res: Response) => {
-    const provider = new Ra2ValuesPlayerDataProvider();
+    const provider = new Ra2ValuesPlayerDataProvider(config);
     return res.json({
         'data': provider.getMetadata()
     });
 });
 
 app.get('/active-players', async(req: Request, res: Response) => {
-    const provider = new Ra2ValuesPlayerDataProvider();
+    const provider = new Ra2ValuesPlayerDataProvider(config);
 
     const sourceReadyResult = provider.checkSourceReady();
     if(!sourceReadyResult.isReady) {
@@ -106,7 +110,7 @@ app.get('/active-players', async(req: Request, res: Response) => {
 
 const server = app.listen(config.server.port, () => {
     console.log("Server successfully running on port " + config.server.port);
-    console.log("    Open : http://" + config.server.hostname + ":" + config.server.port + clientBasePath + " in your browser");
+    console.log("Open : http://" + config.server.hostname + ":" + config.server.port + clientBasePath + " in your browser");
 });
 
 websockets(server)
