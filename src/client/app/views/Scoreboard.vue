@@ -73,7 +73,7 @@ function useView(view: string) {
   <div v-if="!isSlave">
     <Nav />
   </div>
-  <div :class="!isSlave ? 'p-2 mb-4' : ''">
+  <div :class="!isSlave ? 'p-2 pb-4 bg-gray-200' : ''">
 
     <h1 v-if="!view" class="text-2xl font-bold border-b m-1 mb-4 ">
       Scoreboard
