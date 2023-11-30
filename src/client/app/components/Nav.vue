@@ -26,7 +26,7 @@ function activeClass(path) {
         Settings
       </router-link>
       <router-link :to="prefix + '/scoreboard'" :class="activeClass(prefix + '/scoreboard')">
-        Scoreboard
+        Layouts
       </router-link>
     </nav>
   </div>

@@ -2,52 +2,60 @@ import Color from "../models/Color";
 
 export const colors: { [key: string]: Color } = {
     'cyan': new Color({
-        name:'Cyan',
+        name:'Light blue',
         hex:'cyan',
-        gradient:'linear-gradient(0deg, rgba(0,156,156,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-cyan-700 bg-gradient-to-b to-cyan-700 from-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-cyan-300',
+        borderClassNames: 'border-cyan-700',
     }),
     'blue': new Color({
         name:'Blue',
         hex:'blue',
-        gradient:'linear-gradient(0deg, rgba(0,0,156,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-blue-700 bg-gradient-to-b from-blue-700 to-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-blue-700',
+        borderClassNames: 'border-blue-700',
     }),
     'green': new Color({
         name:'Green',
         hex:'green',
-        gradient:'linear-gradient(0deg, rgba(0,156,0,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-green-700 bg-gradient-to-b to-green-700 from-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-green-300',
+        borderClassNames: 'border-green-700',
     }),
     'pink': new Color({
         name:'Pink',
         hex:'fuchsia',
-        gradient:'linear-gradient(0deg, rgba(156,0,156,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-fuchsia-300 bg-gradient-to-b to-fuchsia-300 from-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-fuchsia-300',
+        borderClassNames: 'border-fuchsia-300',
     }),
     'purple': new Color({
         name:'Purple',
         hex:'purple',
-        gradient:'linear-gradient(0deg, rgba(156,0,156,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-purple-700 bg-gradient-to-b to-purple-700 from-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-purple-300',
+        borderClassNames: 'border-purple-700',
     }),
     'orange': new Color({
         name:'Orange',
         hex:'orange',
-        gradient:'linear-gradient(0deg, rgba(156,78,0,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-orange-700 bg-gradient-to-b to-orange-700 from-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-orange-700',
+        borderClassNames: 'border-orange-700',
     }),
     'red': new Color({
         name:'Red',
         hex:'red',
-        gradient:'inear-gradient(0deg, rgba(156,0,0,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-red-700 bg-gradient-to-b to-red-700 from-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-red-700',
+        borderClassNames: 'border-red-700',
     }),
     'yellow': new Color({
         name:'Yellow',
         hex:'yellow',
-        gradient:'linear-gradient(0deg, rgba(163,159,0,1) 0%, rgba(0,0,0,0.32816876750700286) 100%)',
-        className: 'border-yellow-700 bg-gradient-to-b to-yellow-700 from-transparent'
+        gradientFromClassNames: 'from-gray-700',
+        gradientToClassNames: 'to-yellow-300',
+        borderClassNames: 'border-yellow-300',
     }),
 }
 
