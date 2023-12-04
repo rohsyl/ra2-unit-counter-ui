@@ -1,6 +1,7 @@
 export default class Color {
 
     public name: string;
+    public label: string;
     public hex?: string;
     public gradient?: string;
     public className?: string;
@@ -10,6 +11,7 @@ export default class Color {
 
     constructor({
         name,
+        label,
         hex,
         gradient,
         className,
@@ -18,6 +20,7 @@ export default class Color {
         borderClassNames
     }: {
         name: string,
+        label: string,
         hex?: string,
         gradient?: string,
         className?: string,
@@ -26,6 +29,7 @@ export default class Color {
         borderClassNames?: string
     }) {
         this.name = name;
+        this.label = label;
         this.hex = hex;
         this.gradient = gradient;
         this.className = className;
@@ -37,7 +41,7 @@ export default class Color {
     public toOption(): { value: string, label: string } {
         return {
             value: this.name.toLowerCase(),
-            label:  this.name.charAt(0).toUpperCase() +  this.name.slice(1),
+            label:  this.label.charAt(0).toUpperCase() +  this.label.slice(1),
         }
     }
 }
