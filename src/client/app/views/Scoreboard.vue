@@ -22,11 +22,13 @@ enum Views {
 
 const route = useRoute()
 const isSlave: Ref<boolean> = ref(true)
+const copied: Ref<undefined | string> = ref(undefined)
 const view: Ref<undefined | string> = ref(undefined)
 const userAgent: Ref<string> = ref('')
 let wsConnection = null
 
 const btnUseViewText = 'Copy URL to use this layout'
+const btnCopiedText = 'Copied to clipboard !'
 const gameStore = useGameStore()
 const metadataStore = useMetadataStore()
 
@@ -64,7 +66,19 @@ onMounted(() => {
 })
 
 function useView(view: string) {
-  window.location.href = `${ConfigProvider.config.client.base_path}/scoreboard?nonav&view=${view}`
+
+  let text = `${ConfigProvider.config.client.base_path}/scoreboard?nonav&view=${view}`
+
+  navigator.clipboard.writeText(text).then(() => {
+    console.log('Content copied to clipboard');
+    copied.value = text
+    setTimeout(() => {
+      copied.value = undefined
+    }, 2000)
+  },() => {
+    window.location.href = text
+  });
+
 }
 
 </script>
@@ -78,7 +92,8 @@ function useView(view: string) {
     <h1 v-if="!view" class="text-2xl font-bold border-b m-1 mb-4 ">
       Scoreboard
       <SmallButton type="button" class="ml-4 mb-1" @click="useView(Views.Scoreboard)">
-        {{ btnUseViewText }}
+        <span v-if="copied === Views.Scoreboard">{{ btnCopiedText }}</span>
+        <span v-else>{{ btnUseViewText }}</span>
       </SmallButton>
     </h1>
     <div v-if="!view || view === Views.Scoreboard" class="flex justify-center gap-2">
@@ -142,7 +157,8 @@ function useView(view: string) {
     <h1 v-if="!view" class="text-2xl font-bold border-b m-1 mb-4 ">
       Top unit counter with scoreboard
       <SmallButton type="button" class="ml-4 mb-1" @click="useView(Views.TopUnitsWithScoreboard)">
-        {{ btnUseViewText }}
+        <span v-if="copied === Views.TopUnitsWithScoreboard">{{ btnCopiedText }}</span>
+        <span v-else>{{ btnUseViewText }}</span>
       </SmallButton>
     </h1>
     <div v-if="!view || view === Views.TopUnitsWithScoreboard" class="flex justify-between gap-2">
@@ -213,7 +229,8 @@ function useView(view: string) {
     <h1 v-if="!view" class="text-2xl font-bold border-b m-1 mb-4 mt-4">
       Standalone unit counter player 1
       <SmallButton type="button" class="ml-4 mb-1" @click="useView(Views.StandaloneUnitsRowPlayer1)">
-        {{ btnUseViewText }}
+        <span v-if="copied === Views.StandaloneUnitsRowPlayer1">{{ btnCopiedText }}</span>
+        <span v-else>{{ btnUseViewText }}</span>
       </SmallButton>
     </h1>
     <div  v-if="!view || view === Views.StandaloneUnitsRowPlayer1">
@@ -224,7 +241,8 @@ function useView(view: string) {
     <h1 v-if="!view" class="text-2xl font-bold border-b m-1 mb-4 mt-4">
       Standalone unit counter player 2
       <SmallButton type="button" class="ml-4 mb-1" @click="useView(Views.StandaloneUnitsRowPlayer2)">
-        {{ btnUseViewText }}
+        <span v-if="copied === Views.StandaloneUnitsRowPlayer2">{{ btnCopiedText }}</span>
+        <span v-else>{{ btnUseViewText }}</span>
       </SmallButton>
     </h1>
     <div  v-if="!view || view === Views.StandaloneUnitsRowPlayer2">
@@ -235,7 +253,8 @@ function useView(view: string) {
     <h1 v-if="!view" class="text-2xl font-bold border-b m-1 mb-4 mt-4">
       Vertical dual player unit counter
       <SmallButton type="button" class="ml-4 mb-1" @click="useView(Views.VerticalDualPlayerUnits)">
-        {{ btnUseViewText }}
+        <span v-if="copied === Views.VerticalDualPlayerUnits">{{ btnCopiedText }}</span>
+        <span v-else>{{ btnUseViewText }}</span>
       </SmallButton>
     </h1>
     <div  v-if="!view || view === Views.VerticalDualPlayerUnits" class="flex gap-1">
