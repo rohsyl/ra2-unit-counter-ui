@@ -3,12 +3,26 @@ import Nav from "../components/Nav.vue";
 import Card from "../components/Card.vue";
 import {useMetadataStore} from "../stores/MetadataStore";
 import {storeToRefs} from "pinia";
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
+import MasterSync from "../services/MasterSync";
 
 const metadataStore = useMetadataStore()
 
 const { getAlliedUnits, getSovietUnits } = storeToRefs(metadataStore)
 
+let wsConnection = undefined
+
+onMounted(() => {
+    wsConnection = new MasterSync()
+    wsConnection.connect()
+})
+watch(
+    metadataStore,
+    (state) => {
+      wsConnection.syncMetadataStore()
+    },
+    { deep: true }
+)
 
 </script>
 

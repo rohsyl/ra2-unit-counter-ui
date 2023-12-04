@@ -13,21 +13,19 @@ import {initIsRunning, useGameStore} from "../stores/GameStore";
 import PlayerControl from "../components/PlayerControl.vue";
 import Button from "../components/form/Button.vue";
 import ConfigProvider from "../providers/ConfigProvider";
+import MasterSync from "../services/MasterSync";
 
 const metadataStore = useMetadataStore()
 const gameStore = useGameStore()
 
 const { getCheckedAlliedUnits, getCheckedSovietUnits, getMetadataState } = storeToRefs(metadataStore)
-const { getState } = storeToRefs(gameStore)
 const prefix = ConfigProvider.config.client.base_path;
 
-let wsConnection = null
+let wsConnection = undefined
 
 onMounted(() => {
-  wsConnection = new WebSocket(ConfigProvider.config.client.ws_url + '?type=master')
-  wsConnection.onopen = () => {
-    console.log('Connected to websocket')
-  }
+  wsConnection = new MasterSync()
+  wsConnection.connect()
 
   // poll every x seconds to check if a game is running
   initIsRunning(gameStore)
@@ -36,24 +34,7 @@ onMounted(() => {
 watch(
     gameStore,
     (state) => {
-      if(wsConnection) {
-        wsConnection.send(JSON.stringify({
-          action: 'message-slaves',
-          message: {
-            action: 'update-store',
-            store: 'game',
-            data: getState.value
-          }
-        }))
-        wsConnection.send(JSON.stringify({
-          action: 'message-slaves',
-          message: {
-            action: 'update-store',
-            store: 'metadata',
-            data: getMetadataState.value
-          }
-        }))
-      }
+      wsConnection.syncGameStore()
     },
     { deep: true }
 )
