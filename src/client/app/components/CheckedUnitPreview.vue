@@ -14,6 +14,8 @@ const className: string = props.color && props.color.className
     ? props.color.className
     : 'border-gray-700 bg-gradient-to-b from-gray-700 to-white'
 
+
+
 </script>
 
 <template>

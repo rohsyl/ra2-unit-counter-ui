@@ -5,6 +5,7 @@ export interface Unit {
     name: string;
     position: number;
     checked: boolean;
+    faction?: string;
 }
 
 interface UnitsContainer {
@@ -46,7 +47,8 @@ function initDefaultUnits(units: { allied: string[], soviet: string[], yuri: str
             result[faction].push({
                 name: unit,
                 checked: factionDefaultsMap[faction].includes(unit),
-                position: factionDefaultsMap[faction].indexOf(unit)
+                position: factionDefaultsMap[faction].indexOf(unit),
+                faction: faction,
             } as Unit)
         }
     }
@@ -103,14 +105,11 @@ export const useMetadataStore = defineStore('metadata', {
     actions: {
         async loadMetadata(): Promise<boolean> {
 
-
-
             const response = await fetch(ConfigProvider.config.client.api_url + '/metadata');
             const data = (await response.json()).data;
 
             this.colors = data.colors;
             this.countries = data.countries;
-
 
             const defaults: UnitsContainer = initDefaultUnits(data.units);
             for (const faction in this.units as UnitsContainer) {

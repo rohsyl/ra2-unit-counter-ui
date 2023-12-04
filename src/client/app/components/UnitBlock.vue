@@ -2,6 +2,7 @@
 
 import AssetsProvider from "../providers/AssetsProvider";
 import Color from "../models/Color";
+import {computed} from "vue";
 
 const props = withDefaults(
     defineProps<{
@@ -16,6 +17,14 @@ const props = withDefaults(
 const assets = new AssetsProvider()
 
 const { containerDirectionClass, containerTextClass, imageWidth } = initDirection()
+
+const unitImg = computed(() => {
+  let name = props.unit.name;
+  if(props.unit.name == 'warfactories'){
+    name = props.unit.faction + '_' + props.unit.name
+  }
+  return assets.getUnitImgSrc(name)
+})
 
 function initDirection() {
   let containerDirectionClass = 'flex ';
@@ -41,7 +50,7 @@ function initDirection() {
        :class="(props.color
       ? props.color.borderClassNames + ' ' + props.color.gradientFromClassNames + ' ' + props.color.gradientToClassNames
       : 'border-gray-700 bg-gradient-to-b from-gray-700 to-white') + ' ' + containerDirectionClass" >
-    <img :src="assets.getUnitImgSrc(unit.name)" :alt="unit.name" class="rounded-lg" :class="imageWidth"/>
+    <img :src="unitImg" :alt="unit.name" class="rounded-lg" :class="imageWidth"/>
     <p class="text-center text-3xl font-bold text-white"
        :class="containerTextClass">
       {{ props.count }}
