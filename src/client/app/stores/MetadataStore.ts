@@ -34,6 +34,16 @@ export const defaultSovietUnits = [
     "oils",
 ];
 
+export const defaultYuriUnits = [
+    "discs",
+    "gattlings",
+    "magnetrons",
+    "masterminds",
+    "warfactories",
+    "yuriminers",
+    "oils",
+];
+
 const factionDefaultsMap = {
     allied: defaultAlliedUnits,
     soviet: defaultSovietUnits,
@@ -79,6 +89,9 @@ export const useMetadataStore = defineStore('metadata', {
         },
         getSovietUnits(state): Unit[] {
             return state.units.soviet.sort(sortUnits);
+        },
+        getYuriUnits(state): Unit[] {
+            return state.units.yuri.sort(sortUnits);
         },
         getCheckedAlliedUnits(state): Unit[] {
             return state.units.allied.filter(unit => unit.checked).sort(sortUnits);

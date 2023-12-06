@@ -30,8 +30,6 @@ dotenv.config({
     path: dotEnvPath
 });
 
-
-
 const configProvider: ConfigProvider = new ConfigProvider();
 const config = configProvider.get();
 

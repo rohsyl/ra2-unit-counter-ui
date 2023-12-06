@@ -67,11 +67,10 @@ onMounted(() => {
 
 function useView(view: string) {
 
-  let text = `${ConfigProvider.config.client.base_path}/scoreboard?nonav&view=${view}`
+  let text = `${ConfigProvider.config.client.api_url}${ConfigProvider.config.client.base_path}/scoreboard?nonav&view=${view}`
 
   navigator.clipboard.writeText(text).then(() => {
-    console.log('Content copied to clipboard');
-    copied.value = text
+    copied.value = view
     setTimeout(() => {
       copied.value = undefined
     }, 2000)

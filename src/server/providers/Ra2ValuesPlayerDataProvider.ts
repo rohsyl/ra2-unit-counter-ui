@@ -71,9 +71,9 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         'lashers',
         'magnetrons',
         'masterminds',
-        'oils',
         'warfactories',
         'yuriminers',
+        'oils',
     ];
 
     public config: Config;
