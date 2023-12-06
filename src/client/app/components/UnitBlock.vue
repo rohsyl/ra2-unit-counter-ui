@@ -21,7 +21,7 @@ const { containerDirectionClass, containerTextClass, imageWidth } = initDirectio
 const unitImg = computed(() => {
   let name = props.unit.name;
   if(props.unit.name == 'warfactories'){
-    name = props.unit.faction + '_' + props.unit.name
+    name = (props.unit.faction ?? 'soviet') + '_' + props.unit.name
   }
   return assets.getUnitImgSrc(name)
 })
