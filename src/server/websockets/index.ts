@@ -24,17 +24,17 @@ export default async (expressServer: any) => {
 
             // NOTE: connectParams are not used here but good to understand how to get
             // to them if you need to pass data with the connection to identify it (e.g., a userId).
-            console.log(connectionParams);
+            //console.log(connectionParams);
 
             if(connectionParams.type) {
                 if(connectionParams.type === 'master') {
-                    console.log('master connected');
+                    //console.log('master connected');
                     masterConnection = websocketConnection;
                     handleMaster(websocketConnection);
 
                 }
                 if(connectionParams.type === 'slave') {
-                    console.log('slave connected');
+                    //console.log('slave connected');
                     slaveConnections.push(websocketConnection);
                     handleSlave(websocketConnection);
                 }
@@ -51,7 +51,7 @@ function handleMaster(websocketConnection: any) {
 
     websocketConnection.on("message", (message: any) => {
         const parsedMessage = JSON.parse(message);
-        console.log(parsedMessage);
+        //console.log(parsedMessage);
 
         if(parsedMessage.action) {
             if(parsedMessage.action === 'message-slaves') {
