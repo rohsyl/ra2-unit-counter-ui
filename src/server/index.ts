@@ -8,6 +8,7 @@ import {PlayerData} from "./providers/DataProvider";
 import fs from "fs";
 import ejs from "ejs";
 import ConfigProvider from "./config";
+//import initGui from "../gui/index.js";
 
 interface Process extends NodeJS.Process {
     pkg: any;
@@ -112,3 +113,5 @@ const server = app.listen(config.server.port, () => {
 });
 
 websockets(server)
+
+//initGui();

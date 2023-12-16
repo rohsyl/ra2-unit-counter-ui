@@ -107,7 +107,7 @@ function useView(view: string) {
                    : 'gray')"
               >
                 <div class="flex">
-                  <div class="flex-grow text-left self-center leading-none pb-0.5 capitalize px-4">
+                  <div class="flex-grow text-left self-center leading-none pb-0.5 capitalize px-4 text-ellipsis overflow-hidden" style="width:180px;">
                     {{ gameStore.player1.name }}
                   </div>
                 </div>
@@ -136,7 +136,7 @@ function useView(view: string) {
                    : 'gray')"
               >
                 <div class="flex">
-                  <div class="flex-grow text-right self-center leading-none pb-0.5 capitalize px-4">
+                  <div class="flex-grow text-right self-center leading-none pb-0.5 capitalize px-4 text-ellipsis overflow-hidden" style="width:180px;">
                     {{ gameStore.player2.name }}
                   </div>
                 </div>
@@ -175,7 +175,7 @@ function useView(view: string) {
                    : 'gray')"
                 >
                 <div class="flex">
-                  <div class="flex-grow text-left self-center leading-none pb-0.5 capitalize px-4">
+                  <div class="flex-grow text-left self-center leading-none pb-0.5 capitalize px-4 text-ellipsis overflow-hidden" style="width:180px;">
                     {{ gameStore.player1.name }}
                   </div>
                 </div>
@@ -204,7 +204,7 @@ function useView(view: string) {
                    : 'gray')"
               >
                 <div class="flex">
-                  <div class="flex-grow text-right self-center leading-none pb-0.5 capitalize px-4">
+                  <div class="flex-grow text-right self-center leading-none pb-0.5 capitalize px-4 text-ellipsis overflow-hidden" style="width:180px;">
                     {{ gameStore.player2.name }}
                   </div>
                 </div>
