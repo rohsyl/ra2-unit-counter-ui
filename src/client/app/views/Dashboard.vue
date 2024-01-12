@@ -14,6 +14,7 @@ import PlayerControl from "../components/PlayerControl.vue";
 import Button from "../components/form/Button.vue";
 import ConfigProvider from "../providers/ConfigProvider";
 import MasterSync from "../services/MasterSync";
+import TeamControl from "../components/TeamControl.vue";
 
 const metadataStore = useMetadataStore()
 const gameStore = useGameStore()
@@ -42,6 +43,8 @@ watch(
 function resetScore() {
   gameStore.player1.score = 0
   gameStore.player2.score = 0
+  gameStore.team1.score = 0
+  gameStore.team2.score = 0
 }
 
 function refreshSlave() {
@@ -56,6 +59,9 @@ function refreshSlave() {
 
 }
 
+function setGameMode(mode) {
+  gameStore.setGameMode(mode);
+}
 
 </script>
 
@@ -89,7 +95,37 @@ function refreshSlave() {
       </div>
     </div>
 
-    <div class="flex flex-col md:flex-row gap-2 mb-2">
+
+    <div class="mb-2">
+      <Button @click="setGameMode('1v1')" class="mr-2 "
+              :class="gameStore.gameMode === '1v1' ? '' : 'bg-gray-400 border-blue-700 text-black hover:text-white'">
+       1v1
+      </Button>
+      <Button @click="setGameMode('2v2')" class="mr-2 text-black"
+              :class="gameStore.gameMode === '2v2' ? '' : 'bg-gray-400 border-blue-700 text-black hover:text-white'">
+        2v2
+      </Button>
+      <!--<Button @click="setGameMode('3v3')" class="mr-2 text-black"
+              :class="gameStore.gameMode === '3v3' ? '' : 'bg-gray-400 border-blue-700 text-black hover:text-white'">
+        3v3
+      </Button>-->
+    </div>
+
+
+    <div v-if="gameStore.gameMode === '2v2' || gameStore.gameMode === '3v3'" class="flex flex-col md:flex-row gap-2 mb-2">
+      <div class="w-full">
+        <Card>
+          <TeamControl :team="gameStore.team1" />
+        </Card>
+      </div>
+      <div class="w-full">
+        <Card>
+          <TeamControl :team="gameStore.team2" />
+        </Card>
+      </div>
+    </div>
+
+    <div v-if="gameStore.gameMode === '1v1'" class="flex flex-col md:flex-row gap-2 mb-2">
       <div class="w-full">
         <Card>
           <PlayerControl :player="gameStore.player1" :player-number="'1'" />

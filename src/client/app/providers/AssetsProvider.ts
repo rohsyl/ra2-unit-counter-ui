@@ -4,6 +4,6 @@ export default class AssetsProvider {
     }
 
     public getFactionImgSrc(factionName: string): string {
-        return `/ra2/assets/factions/${factionName}.png`
+        return `/ra2/assets/factions/${factionName}.webp`
     }
 }

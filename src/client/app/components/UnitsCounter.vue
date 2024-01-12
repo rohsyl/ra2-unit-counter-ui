@@ -6,6 +6,7 @@ import {storeToRefs} from "pinia";
 import UnitBlock from "./UnitBlock.vue";
 import {useMetadataStore} from "../stores/MetadataStore";
 import Color from "../models/Color";
+import ColoredCard from "./ColoredCard.vue";
 
 const props = withDefaults(
     defineProps<{
@@ -93,8 +94,8 @@ function initDirection() {
     containerDirectionClass = 'flex-col gap-1'
     labelsDirectionContainerClass = ' w-[120px] flex-col text-lg'
     iconSize = ' w-6 h-6'
-    moneyDirectionContainerClass = ' px-1 mb-2 flex justify-between'
-    powerDirectionContainerClass = ' px-1 mb-2 flex justify-between m-0 '
+    moneyDirectionContainerClass = ' px-1 mb-1 flex justify-between'
+    powerDirectionContainerClass = ' px-1 mb-0 flex justify-between m-0 '
   }
   return {
     containerDirectionClass, labelsDirectionContainerClass, iconSize, moneyDirectionContainerClass, powerDirectionContainerClass
@@ -118,6 +119,34 @@ function getUnitCount(unit: string) {
   <Transition name="fade">
     <div v-if="running && player && playerData">
 
+      <ColoredCard :color="props.color" :direction="props.direction" class="mb-1">
+        <div :class="'flex mt-0 w-full ' + labelsContainerClass + ' ' + labelsDirectionContainerClass">
+          <div :class="'flex align-middle font-bold text-white gap-2 ' + moneyContainerClass + ' ' + moneyDirectionContainerClass">
+            <span class="drop-shadow-lg">
+              {{ playerData.balance }}
+            </span>
+            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div v-if="playerData.is_low_power" :class="'flex align-middle gap-2 font-bold text-red-500 animate-pulse ' + powerContainerClass + ' ' + powerDirectionContainerClass">
+            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.412 15.655L9.75 21.75l3.745-4.012M9.257 13.5H3.75l2.659-2.849m2.048-2.194L14.25 2.25 12 10.5h8.25l-4.707 5.043M8.457 8.457L3 3m5.457 5.457l7.086 7.086m0 0L21 21" />
+            </svg>
+            <div>
+              LOW
+            </div>
+          </div>
+          <div v-else :class="'flex align-middle gap-2 font-bold text-green-300 text-white ' + powerContainerClass + ' ' + powerDirectionContainerClass">
+            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+            <div>
+              OK
+            </div>
+          </div>
+        </div>
+      </ColoredCard>
 
       <div :class="'flex gap-1 flex-wrap ' + containerClass + ' ' + containerDirectionClass">
 
@@ -131,35 +160,32 @@ function getUnitCount(unit: string) {
       </div>
 
 
-      <div :class="'flex mt-2 ' + labelsContainerClass + ' ' + labelsDirectionContainerClass">
-        <div :class="'flex align-middle font-bold text-white gap-2 ' + moneyContainerClass + ' ' + moneyDirectionContainerClass">
-          <span class="drop-shadow-lg">
-            {{ playerData.balance }}
-          </span>
-          <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div v-if="playerData.is_low_power" :class="'flex align-middle gap-2 font-bold text-red-500 animate-pulse ' + powerContainerClass + ' ' + powerDirectionContainerClass">
-          <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11.412 15.655L9.75 21.75l3.745-4.012M9.257 13.5H3.75l2.659-2.849m2.048-2.194L14.25 2.25 12 10.5h8.25l-4.707 5.043M8.457 8.457L3 3m5.457 5.457l7.086 7.086m0 0L21 21" />
-          </svg>
-          <div>
-            LOW
-          </div>
-        </div>
-        <div v-else :class="'flex align-middle gap-2 font-bold text-green-300 text-white ' + powerContainerClass + ' ' + powerDirectionContainerClass">
-          <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-          </svg>
-          <div>
-            OK
-          </div>
-        </div>
-      </div>
+
 
     </div>
     <div v-else>
+
+      <ColoredCard :color="props.color" :direction="props.direction" class="mb-1">
+        <div :class="'flex mt-0 w-full ' + labelsContainerClass + ' ' + labelsDirectionContainerClass">
+          <div :class="'flex align-middle gap-2 font-bold text-green-300 text-white ' + powerContainerClass + ' ' + powerDirectionContainerClass">
+            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+            <div>
+              OK
+            </div>
+          </div>
+          <div :class="'flex align-middle font-bold text-white gap-2 ' + moneyContainerClass + ' ' + moneyDirectionContainerClass">
+            <span class="drop-shadow-lg">
+              0
+            </span>
+            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        </div>
+      </ColoredCard>
+
       <div :class="'flex gap-1 flex-wrap ' + containerClass + ' ' + containerDirectionClass">
         <UnitBlock v-for="unit in units"
                    :unit="unit"
@@ -167,24 +193,6 @@ function getUnitCount(unit: string) {
                    :color="props.color"
                    :direction="props.direction"
         />
-      </div>
-      <div :class="'flex mt-2 ' + labelsContainerClass + ' ' + labelsDirectionContainerClass">
-        <div :class="'flex align-middle gap-2 font-bold text-green-300 text-white ' + powerContainerClass + ' ' + powerDirectionContainerClass">
-          <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-          </svg>
-          <div>
-            OK
-          </div>
-        </div>
-        <div :class="'flex align-middle font-bold text-white gap-2 ' + moneyContainerClass + ' ' + moneyDirectionContainerClass">
-          <span class="drop-shadow-lg">
-            0
-          </span>
-          <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
       </div>
     </div>
   </Transition>

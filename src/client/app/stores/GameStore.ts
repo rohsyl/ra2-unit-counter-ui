@@ -9,6 +9,12 @@ export interface Player {
     score: number;
 }
 
+export interface Team {
+    name: string;
+    players: Player[];
+    score: number;
+}
+
 export function initIsRunning(gameStore: any) {
     gameStore.$patch({
         gameRunning: false,
@@ -23,12 +29,38 @@ export async function isRunning(gameStore: any) {
     }, 4000);
 }
 
+function initTeam(team: Team|undefined, size: number): Team {
+    if(!team) {
+        team = {
+            name: 'Team',
+            players: [],
+            score: 0,
+        }
+    }
+
+    while(team.players.length < size) {
+        team.players.push({
+            name: '',
+            color: '',
+            score: 0,
+        });
+    }
+
+    if(team.players.length > size) {
+        team.players.splice(size, team.players.length - size);
+    }
+
+    return team;
+}
 
 export const useGameStore = defineStore('game', {
     state: () : {
         player1: Player,
         player2: Player,
+        team1?: Team,
+        team2?: Team,
         gameFormat: string,
+        gameMode: string,
         error?: string,
         gameRunning: boolean,
     } => ({
@@ -42,16 +74,30 @@ export const useGameStore = defineStore('game', {
             color: '',
             score: 0,
         },
+        team1: {
+            name: 'Team 1',
+            players: [],
+            score: 0,
+        },
+        team2: {
+            name: 'Team 2',
+            players: [],
+            score: 0,
+        },
         error: undefined,
         gameFormat: 'BO5',
+        gameMode: '1v1',
         gameRunning: false,
     }),
     getters: {
-        getState(): { player1: Player, player2: Player, gameFormat: string } {
+        getState(): { player1: Player, player2: Player, team1?: Team, team2?: Team, gameFormat: string, gameMode: string } {
             return {
                 player1: this.player1,
                 player2: this.player2,
+                team1: this.team1,
+                team2: this.team2,
                 gameFormat: this.gameFormat,
+                gameMode: this.gameMode
             }
         },
         getPlayer1Color(): Color {
@@ -99,6 +145,22 @@ export const useGameStore = defineStore('game', {
         },
         async fetchPlayerUnits(player: Player) {
             const response = await fetch(ConfigProvider.config.client.api_url + 'playerdata/' + player.color);
+        },
+
+        getColor(player: Player): Color {
+            return ColorsProvider.getColor(player.color);
+        },
+
+        setGameMode(gameMode: string) {
+            this.gameMode = gameMode;
+            if(gameMode === '2v2') {
+                this.team1 = initTeam(this.team1, 2);
+                this.team2 = initTeam(this.team2, 2);
+            }
+            else if(gameMode === '3v3') {
+                this.team1 = initTeam(this.team1, 3);
+                this.team2 = initTeam(this.team2, 3);
+            }
         }
     },
     persist: true

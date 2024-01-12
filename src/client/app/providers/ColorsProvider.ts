@@ -8,6 +8,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-cyan-300',
         borderClassNames: 'border-cyan-700',
+        textClassnames: 'text-cyan-300',
     }),
     'blue': new Color({
         name:'blue',
@@ -16,6 +17,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-blue-700',
         borderClassNames: 'border-blue-700',
+        textClassnames: 'text-blue-700',
     }),
     'green': new Color({
         name:'green',
@@ -23,6 +25,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-green-300',
         borderClassNames: 'border-green-700',
+        textClassnames: 'text-green-300',
     }),
     'pink': new Color({
         name:'pink',
@@ -30,6 +33,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-fuchsia-300',
         borderClassNames: 'border-fuchsia-300',
+        textClassnames: 'text-fuchsia-300',
     }),
     'purple': new Color({
         name:'purple',
@@ -37,6 +41,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-purple-300',
         borderClassNames: 'border-purple-700',
+        textClassnames: 'text-purple-300',
     }),
     'orange': new Color({
         name:'orange',
@@ -44,6 +49,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-orange-700',
         borderClassNames: 'border-orange-700',
+        textClassnames: 'text-orange-300',
     }),
     'red': new Color({
         name:'red',
@@ -51,6 +57,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-red-700',
         borderClassNames: 'border-red-700',
+        textClassnames: 'text-red-700',
     }),
     'yellow': new Color({
         name:'yellow',
@@ -58,6 +65,7 @@ export const colors: { [key: string]: Color } = {
         gradientFromClassNames: 'from-gray-700',
         gradientToClassNames: 'to-yellow-300',
         borderClassNames: 'border-yellow-300',
+        textClassnames: 'text-yellow-300',
     }),
 }
 
