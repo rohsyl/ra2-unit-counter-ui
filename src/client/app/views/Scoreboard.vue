@@ -164,10 +164,20 @@ function useView(view: string) {
           </template>
 
           <template v-slot:score1>
-            {{ gameStore.player1.score }}
+            <div v-if="gameStore.gameMode === '1v1'">
+              {{ gameStore.player1.score }}
+            </div>
+            <div v-else>
+              {{ gameStore.team1.score }}
+            </div>
           </template>
           <template v-slot:score2>
-            {{ gameStore.player2.score }}
+            <div v-if="gameStore.gameMode === '1v1'">
+              {{ gameStore.player2.score }}
+            </div>
+            <div v-else>
+              {{ gameStore.team2.score }}
+            </div>
           </template>
 
           <template v-slot:format>
