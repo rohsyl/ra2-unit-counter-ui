@@ -49,7 +49,7 @@ Api will return different status code if there is any errors :
 
 ### Get players
 
-This endpoint will return you the list of all players with their colors. The response will vary depends if you are in 1v1 more or 
+This endpoint will return you the list of all players with their colors. The response will vary depends if you are in 1v1 mode or 
 2v2 mode.
 
 Endpoint :
