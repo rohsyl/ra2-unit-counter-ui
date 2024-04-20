@@ -3,7 +3,7 @@ import Nav from "../components/Nav.vue";
 import Card from "../components/Card.vue";
 import {useMetadataStore} from "../stores/MetadataStore";
 import {storeToRefs} from "pinia";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import InputText from "../components/form/InputText.vue";
 import InputLabel from "../components/form/InputLabel.vue";
 import InputHelper from "../components/form/InputHelper.vue";
@@ -40,6 +40,9 @@ onMounted(() => {
   // poll every x seconds to check if a game is running
   initIsRunning(gameStore)
   watchGameStore();
+})
+onUnmounted(() => {
+  wsConnection.close()
 })
 
 function watchGameStore() {

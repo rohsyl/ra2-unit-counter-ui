@@ -27,13 +27,15 @@ export default async(req: Request, res: Response) => {
         for (const player of data.team1.players) {
             players.push({
                 player: player.name,
-                color: player.color
+                color: player.color,
+                team: 0
             })
         }
         for (const player of data.team2.players) {
             players.push({
                 player: player.name,
-                color: player.color
+                color: player.color,
+                team: 1
             })
         }
     }

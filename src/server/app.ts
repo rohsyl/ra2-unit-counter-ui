@@ -20,7 +20,6 @@ export class App {
     public static instance(): App {
         if(!App._app) {
             App._app = new App();
-            console.log('instance set')
         }
         return App._app;
     }

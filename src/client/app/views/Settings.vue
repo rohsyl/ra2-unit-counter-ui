@@ -3,7 +3,7 @@ import Nav from "../components/Nav.vue";
 import Card from "../components/Card.vue";
 import {useMetadataStore} from "../stores/MetadataStore";
 import {storeToRefs} from "pinia";
-import {computed, onMounted, watch} from "vue";
+import {computed, onMounted, onUnmounted, watch} from "vue";
 import MasterSync from "../services/MasterSync";
 import AssetsProvider from "../providers/AssetsProvider";
 
@@ -17,6 +17,9 @@ let wsConnection = undefined
 onMounted(() => {
     wsConnection = new MasterSync()
     wsConnection.connect()
+})
+onUnmounted(() => {
+  wsConnection.close()
 })
 watch(
     metadataStore,

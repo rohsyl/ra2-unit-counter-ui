@@ -54,4 +54,8 @@ export default class MasterSync {
     public getWs() {
         return this.ws;
     }
+
+    public close() {
+        this.ws.close()
+    }
 }
