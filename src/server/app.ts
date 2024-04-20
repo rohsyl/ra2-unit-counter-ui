@@ -76,7 +76,7 @@ export class App {
 
 export function bootstrap(): App {
 
-    const appDir: string = path.join(__dirname, '../');
+    const appDir: string = __dirname;
 
     let clientDir: string;
     let dotEnvPath: string;
