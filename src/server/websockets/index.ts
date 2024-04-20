@@ -1,11 +1,13 @@
-import WebSocket from 'ws';
+import {Server} from 'ws';
 import qs from "qs";
+import {App} from "../app";
+import masterHandler from './handlers/master-handler'
+import slaveHandler from './handlers/slave-handler'
 
-let masterConnection: any = null;
-let slaveConnections: any[] = []
 
 export default async (expressServer: any) => {
-    const websocketServer = new WebSocket.Server({
+
+    const websocketServer: Server = new Server({
         noServer: true,
         path: "/websockets",
     });
@@ -22,59 +24,57 @@ export default async (expressServer: any) => {
             const [_path, params] = connectionRequest?.url?.split("?");
             const connectionParams = qs.parse(params);
 
-            // NOTE: connectParams are not used here but good to understand how to get
-            // to them if you need to pass data with the connection to identify it (e.g., a userId).
-            //console.log(connectionParams);
-
             if(connectionParams.type) {
                 if(connectionParams.type === 'master') {
-                    //console.log('master connected');
-                    masterConnection = websocketConnection;
-                    handleMaster(websocketConnection);
 
+                    //if already a master connection opened, refuse connection
+                    if(App.instance().masterConnection) {
+                        websocketConnection.send(JSON.stringify({ message: 'refused' }));
+                        websocketConnection.close()
+                        return;
+                    }
+
+                    masterHandler(websocketConnection);
                 }
-                if(connectionParams.type === 'slave') {
-                    //console.log('slave connected');
-                    slaveConnections.push(websocketConnection);
-                    handleSlave(websocketConnection);
+                else if(connectionParams.type === 'slave') {
+                    slaveHandler(websocketConnection);
+                }
+                else {
+                    websocketConnection.send(JSON.stringify({ message: 'invalid' }));
+                    websocketConnection.disconnect()
                 }
             }
 
         }
     );
 
+    App.instance().store().on('updated', (storeName: string, storeData: any, emitter: string) => {
+
+        App.instance().slaveConnections.forEach((slaveConnection: any) => {
+            slaveConnection.send(JSON.stringify({ message: {
+                    action: 'update-store',
+                    store: storeName,
+                    data: storeData
+                }
+            }));
+        })
+
+        App.instance().masterConnection.send(JSON.stringify({ message: 'done' }));
+
+        if(emitter === 'api') {
+
+            App.instance().masterConnection.send(JSON.stringify({ message: {
+                    action: 'update-store',
+                    store: storeName,
+                    data: storeData
+                }
+            }));
+        }
+
+    })
+
     return websocketServer;
 };
 
 
-function handleMaster(websocketConnection: any) {
 
-    websocketConnection.on("message", (message: any) => {
-        const parsedMessage = JSON.parse(message);
-        //console.log(parsedMessage);
-
-        if(parsedMessage.action) {
-            if(parsedMessage.action === 'message-slaves') {
-                slaveConnections.forEach((slaveConnection: any) => {
-                    slaveConnection.send(JSON.stringify({ message: parsedMessage.message }));
-                })
-
-                websocketConnection.send(JSON.stringify({ message: 'done' }));
-            }
-        }
-        else {
-            websocketConnection.send(JSON.stringify({ message: 'There be gold in them thar hills.' }));
-        }
-
-    });
-}
-
-function handleSlave(websocketConnection: any) {
-    if(masterConnection) {
-        masterConnection.send(JSON.stringify({ message: 'A slave is connected' }));
-
-        websocketConnection.on("close", (message: any) => {
-            masterConnection.send(JSON.stringify({ message: 'A slave is disconnected' }));
-        })
-    }
-}

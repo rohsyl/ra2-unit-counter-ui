@@ -3,11 +3,9 @@ import Nav from "../components/Nav.vue";
 import Card from "../components/Card.vue";
 import {useMetadataStore} from "../stores/MetadataStore";
 import {storeToRefs} from "pinia";
-import CheckedUnitPreview from "../components/CheckedUnitPreview.vue";
 import {onMounted, ref, watch} from "vue";
 import InputText from "../components/form/InputText.vue";
 import InputLabel from "../components/form/InputLabel.vue";
-import ColorsProvider from "../providers/ColorsProvider";
 import InputHelper from "../components/form/InputHelper.vue";
 import {initIsRunning, useGameStore} from "../stores/GameStore";
 import PlayerControl from "../components/PlayerControl.vue";
@@ -23,22 +21,37 @@ const { getCheckedAlliedUnits, getCheckedSovietUnits, getMetadataState } = store
 const prefix = ConfigProvider.config.client.base_path;
 
 let wsConnection = undefined
+let unwatch;
 
 onMounted(() => {
   wsConnection = new MasterSync()
   wsConnection.connect()
+  wsConnection.getWs().onmessage = (message) => {
+    const data = JSON.parse(message.data)
+    if(data.message.action === 'update-store') {
+      unwatch();
+      if(data.message.store === 'game') {
+        gameStore.$patch(data.message.data)
+      }
+      watchGameStore()
+    }
+  }
 
   // poll every x seconds to check if a game is running
   initIsRunning(gameStore)
+  watchGameStore();
 })
 
-watch(
-    gameStore,
-    (state) => {
-      wsConnection.syncGameStore()
-    },
-    { deep: true }
-)
+function watchGameStore() {
+  unwatch = watch(
+      gameStore,
+      (state) => {
+        wsConnection.syncGameStore()
+      },
+      { deep: true }
+  )
+}
+
 
 function resetScore() {
   gameStore.player1.score = 0

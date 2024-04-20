@@ -1,0 +1,20 @@
+import {EventEmitter} from "events";
+
+export default class Store extends EventEmitter {
+
+    private stores: any;
+
+    constructor() {
+        super();
+        this.stores = {};
+    }
+
+    public update(store: string, data: any, emitter: string) {
+        this.stores[store] = data;
+        this.emit('updated', store, this.stores[store], emitter)
+    }
+
+    public get(store: string): any {
+        return this.stores[store];
+    }
+}

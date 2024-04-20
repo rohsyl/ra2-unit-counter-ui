@@ -16,6 +16,8 @@ export default class MasterSync {
         this.ws.onopen = () => {
             console.log('Connected to websocket <master>')
         }
+
+
     }
 
     public syncGameStore() {
@@ -23,7 +25,7 @@ export default class MasterSync {
         const { getState } = storeToRefs(gameStore)
         if(this.ws) {
             this.ws.send(JSON.stringify({
-                action: 'message-slaves',
+                action: 'update',
                 message: {
                     action: 'update-store',
                     store: 'game',
@@ -38,7 +40,7 @@ export default class MasterSync {
         const { getMetadataState } = storeToRefs(metadataStore)
         if(this.ws) {
             this.ws.send(JSON.stringify({
-                action: 'message-slaves',
+                action: 'update',
                 message: {
                     action: 'update-store',
                     store: 'metadata',
@@ -47,5 +49,9 @@ export default class MasterSync {
             }))
 
         }
+    }
+
+    public getWs() {
+        return this.ws;
     }
 }
