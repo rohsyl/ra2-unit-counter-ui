@@ -82,7 +82,7 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         this.config = config;
     }
 
-    public getPlayerData(color: string): object {
+    public getPlayerData(color: string, withUnits: boolean = true): PlayerData {
 
         const country = this.readPlayerData(color, 'country')
 
@@ -90,15 +90,15 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         let faction = '';
         if(this.alliedCoutries.includes(country)) {
             faction = 'allied';
-            units = this.readUnits(color, this.alliedUnits);
+            units = withUnits ? this.readUnits(color, this.alliedUnits) : [];
         }
         else if(this.sovietCoutries.includes(country)) {
             faction = 'soviet';
-            units = this.readUnits(color, this.sovietUnits);
+            units = withUnits ? this.readUnits(color, this.sovietUnits) : [];
         }
         else {
             faction = 'yuri';
-            units = this.readUnits(color, this.yuriUnits);
+            units = withUnits ? this.readUnits(color, this.yuriUnits) : [];
         }
 
         return {
@@ -161,12 +161,9 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
     getActivePlayers(): PlayerData[] {
         const result: PlayerData[] = [];
         for(const color of this.colors) {
-            const name = this.readPlayerData(color, 'name');
-            if(name !== '') {
-                result.push({
-                    'name': name,
-                    'color': color,
-                });
+            const playerdata = this.getPlayerData(color, false)
+            if(playerdata.name !== '') {
+                result.push(playerdata);
             }
         }
 

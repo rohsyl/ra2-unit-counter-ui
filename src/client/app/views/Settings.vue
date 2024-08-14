@@ -6,6 +6,7 @@ import {storeToRefs} from "pinia";
 import {computed, onMounted, onUnmounted, watch} from "vue";
 import MasterSync from "../services/MasterSync";
 import AssetsProvider from "../providers/AssetsProvider";
+import draggable from 'vuedraggable';
 
 const metadataStore = useMetadataStore()
 const assetsProvider = new AssetsProvider()
@@ -36,6 +37,10 @@ function getUnitImg(faction, name) {
     n = faction + '_' + name
   }
   return assetsProvider.getUnitImgSrc(n)
+}
+
+function updateOrder(faction, e) {
+  metadataStore.updateMetadataOrder(faction, e)
 }
 
 </script>
@@ -83,35 +88,45 @@ function getUnitImg(faction, name) {
       <div class="mb-6">
         <h4 class="text-lg font-bold">Allied units</h4>
         <p>Choose what allied units to show on the layout</p>
-        <div class="w-full sm:w-1/2 md:w-2/3 pt-2 flex items-center gap-2 flex-wrap">
-          <label v-for="unit in getAlliedUnits" :for="'allied' + unit.name" style="width: 60px; height: 45px;" class="relative">
-            <input type="checkbox" :id="'allied' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
-            <img :src="getUnitImg('allied', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
-          </label>
-        </div>
+        <draggable :list="getAlliedUnits" tag="div" class="w-full sm:w-1/2 md:w-2/3 pt-2 flex items-center gap-2 flex-wrap"
+                   group="allied" item-key="name" @change="(e) => updateOrder('allied', e)" :options="{animation: 100}">
+          <template #item="{ element: unit }">
+            <label :for="'allied' + unit.name" style="width: 60px; height: 45px;" class="relative">
+              <input type="checkbox" :id="'allied' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
+              <img :src="getUnitImg('allied', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
+            </label>
+          </template>
+        </draggable>
       </div>
+
 
       <div class="mb-6">
         <h4 class="text-lg font-bold">Soviet units</h4>
         <p>Choose what soviet units to show on the layout</p>
-        <div class="w-full sm:w-1/2 md:w-2/3 pt-2 flex items-center gap-2 flex-wrap">
-          <label v-for="unit in getSovietUnits" :for="'soviet' + unit.name" style="width: 60px; height: 45px;" class="relative">
-            <input type="checkbox" :id="'soviet' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
-            <img :src="getUnitImg('soviet', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
-          </label>
-        </div>
+        <draggable :list="getSovietUnits" tag="div" class="w-full sm:w-1/2 md:w-2/3 pt-2 flex items-center gap-2 flex-wrap"
+                   group="soviet" item-key="name" @change="(e) => updateOrder('soviet', e)" :options="{animation: 100}">
+          <template #item="{ element: unit }">
+            <label :for="'soviet' + unit.name" style="width: 60px; height: 45px;" class="relative">
+              <input type="checkbox" :id="'soviet' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
+              <img :src="getUnitImg('soviet', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
+            </label>
+          </template>
+        </draggable>
       </div>
 
 
       <div class="mb-6">
         <h4 class="text-lg font-bold">Yuri units</h4>
         <p>Choose what yuri units to show on the layout</p>
-        <div class="w-full sm:w-1/2 md:w-2/3 pt-2 flex items-center gap-2 flex-wrap">
-          <label v-for="unit in getYuriUnits" :for="'yuri' + unit.name" style="width: 60px; height: 45px;" class="relative">
-            <input type="checkbox" :id="'yuri' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
-            <img :src="getUnitImg('yuri', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
-          </label>
-        </div>
+        <draggable :list="getYuriUnits" tag="div" class="w-full sm:w-1/2 md:w-2/3 pt-2 flex items-center gap-2 flex-wrap"
+                    group="yuri" item-key="name" @change="(e) => updateOrder('yuri', e)" :options="{animation: 100}">
+          <template #item="{ element: unit }">
+              <label :for="'yuri' + unit.name" style="width: 60px; height: 45px;" class="relative">
+                <input type="checkbox" :id="'yuri' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
+                <img :src="getUnitImg('yuri', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
+              </label>
+          </template>
+        </draggable>
       </div>
 
 

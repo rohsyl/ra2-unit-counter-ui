@@ -27,7 +27,7 @@ const isSlave: Ref<boolean> = ref(true)
 const copied: Ref<undefined | string> = ref(undefined)
 const view: Ref<undefined | string> = ref(undefined)
 const userAgent: Ref<string> = ref('')
-let wsConnection = null
+let wsConnection: WebSocket
 
 const btnUseViewText = 'Copy URL to use this layout'
 const btnCopiedText = 'Copied to clipboard !'
@@ -49,6 +49,11 @@ onMounted(() => {
     return
   }
 
+  connect();
+})
+
+function connect() {
+  console.log('Connecting to websocket...')
   wsConnection = new WebSocket(ConfigProvider.config.client.ws_url + '?type=slave')
 
   wsConnection.onopen = () => {
@@ -67,13 +72,18 @@ onMounted(() => {
     }
   }
 
-})
-
-function getPlayerFaction(player: Player) {
-  if(!unitsStore.players[player.color]) {
-    return null
+  wsConnection.onerror = () => {
+    console.log('Connection to websocket failed. Trying again later')
+    wsConnection.close();
   }
-  return unitsStore.players[player.color].faction ?? null;
+
+  wsConnection.onclose = () => {
+    console.log('Connection closed')
+    setTimeout(function() {
+      connect();
+    }, 5000);
+  }
+
 }
 
 function useView(view: string) {
@@ -118,8 +128,8 @@ function useView(view: string) {
           <template v-slot:left>
             <div v-if="gameStore.gameMode === '1v1'">
               {{ gameStore.player1.name }}
-              <img v-if="getPlayerFaction(gameStore.player1) !== null"
-                   :src="assetProvider.getFactionImgSrc(getPlayerFaction(gameStore.player1))"
+              <img v-if="gameStore.player1.faction"
+                   :src="assetProvider.getFactionImgSrc(gameStore.player1.faction)"
                    class="h-6 float-right" />
             </div>
             <div v-else>
@@ -128,7 +138,7 @@ function useView(view: string) {
               </div>
               <div class="text-sm font-bold mt-1">
                 <span v-for="(player, index) in gameStore.team1.players"
-                      :key="player.id"
+                      :key="index"
                 >
                   <template v-if="index > 0">, </template>
                   <span :class="ColorsProvider.getColor(player.color).textClassnames">
@@ -143,8 +153,8 @@ function useView(view: string) {
           <template v-slot:right>
             <div v-if="gameStore.gameMode === '1v1'">
               {{ gameStore.player2.name }}
-              <img v-if="getPlayerFaction(gameStore.player2) !== null"
-                   :src="assetProvider.getFactionImgSrc(getPlayerFaction(gameStore.player2))"
+              <img v-if="gameStore.player2.faction"
+                   :src="assetProvider.getFactionImgSrc(gameStore.player2.faction)"
                    class="h-6 float-left" />
             </div>
             <div v-else>
@@ -153,7 +163,7 @@ function useView(view: string) {
               </div>
               <div class="text-sm font-bold mt-1">
                 <span v-for="(player, index) in gameStore.team2.players"
-                      :key="player.id">
+                      :key="player.index">
                   <template v-if="index > 0">, </template>
                   <span :class="ColorsProvider.getColor(player.color).textClassnames">
                   {{ player.name }}

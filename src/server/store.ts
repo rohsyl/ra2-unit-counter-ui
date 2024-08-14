@@ -11,6 +11,7 @@ export default class Store extends EventEmitter {
 
     public update(store: string, data: any, emitter: string) {
         this.stores[store] = data;
+        console.log(store, data)
         this.emit('updated', store, this.stores[store], emitter)
     }
 

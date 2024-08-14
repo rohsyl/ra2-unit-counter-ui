@@ -7,6 +7,7 @@ export interface Player {
     name: string;
     color: string;
     score: number;
+    faction?: string;
 }
 
 export interface Team {
@@ -68,11 +69,13 @@ export const useGameStore = defineStore('game', {
             name: '',
             color: '',
             score: 0,
+            faction: ''
         },
         player2: {
             name: '',
             color: '',
             score: 0,
+            faction: ''
         },
         team1: {
             name: 'Team 1',
@@ -126,17 +129,15 @@ export const useGameStore = defineStore('game', {
                 this.gameRunning = data.is_game_running;
 
                 if(this.gameRunning) {
-                    if(this.player1.color === '') {
-                        let player: any = data.players.find((p: any) => p.name === this.player1.name)
-                        if(player) {
-                            this.player1.color = player.color;
-                        }
+                    let p1: any = data.players.find((p: any) => p.name === this.player1.name)
+                    if(p1) {
+                        this.player1.color = p1.color;
+                        this.player1.faction = p1.faction;
                     }
-                    if(this.player2.color === '') {
-                        let player: any = data.players.find((p: any) => p.name === this.player2.name)
-                        if(player) {
-                            this.player2.color = player.color;
-                        }
+                    let p2: any = data.players.find((p: any) => p.name === this.player2.name)
+                    if(p2) {
+                        this.player2.color = p2.color;
+                        this.player2.faction = p2.faction;
                     }
                 }
             }

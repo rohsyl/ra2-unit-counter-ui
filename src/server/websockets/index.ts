@@ -51,6 +51,7 @@ export default async (expressServer: any) => {
     App.instance().store().on('updated', (storeName: string, storeData: any, emitter: string) => {
 
         App.instance().slaveConnections.forEach((slaveConnection: any) => {
+            console.log('notify slave on store change')
             slaveConnection.send(JSON.stringify({ message: {
                     action: 'update-store',
                     store: storeName,

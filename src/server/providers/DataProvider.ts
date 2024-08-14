@@ -16,7 +16,7 @@ export interface SourceReadyResult {
     message: string,
 }
 
-export interface PlayerData {
+export interface PlayerData extends Record<string, any> {
     name: string,
     color: string,
 }

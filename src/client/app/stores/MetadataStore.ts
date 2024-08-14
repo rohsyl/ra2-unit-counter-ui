@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import ConfigProvider from "../providers/ConfigProvider";
+import {b} from "vite/dist/node/types.d-aGj9QkWt";
 
 export interface Unit {
     name: string;
@@ -135,6 +136,18 @@ export const useMetadataStore = defineStore('metadata', {
             }
             return true
         },
+        async updateMetadataOrder(faction: string, e): Promise<boolean> {
+            if(e.hasOwnProperty('moved')) {
+                e.moved.newIndex
+                e.moved.oldIndex
+                let temp = this.units[faction][e.moved.newIndex]
+                this.units[faction][e.moved.newIndex] = this.units[faction][e.moved.oldIndex]
+                this.units[faction][e.moved.oldIndex] = temp;
+                for(let i in this.units[faction]) {
+                    this.units[faction][i].position = parseInt(i);
+                }
+            }
+        }
     },
     persist: true
 })
