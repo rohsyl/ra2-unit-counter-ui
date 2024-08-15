@@ -141,7 +141,7 @@ function useView(view: string) {
                       :key="index"
                 >
                   <template v-if="index > 0">, </template>
-                  <span :class="ColorsProvider.getColor(player.color).textClassnames">
+                  <span :class="ColorsProvider.getColor(player.color)?.textClassnames">
                   {{ player.name }}
                   </span>
                 </span>
@@ -165,7 +165,7 @@ function useView(view: string) {
                 <span v-for="(player, index) in gameStore.team2.players"
                       :key="player.index">
                   <template v-if="index > 0">, </template>
-                  <span :class="ColorsProvider.getColor(player.color).textClassnames">
+                  <span :class="ColorsProvider.getColor(player.color)?.textClassnames">
                   {{ player.name }}
                   </span>
                 </span>

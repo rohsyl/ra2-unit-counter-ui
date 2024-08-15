@@ -25,7 +25,7 @@ export default class ConfigProvider {
                 'api_url': 'http://{hostname}:{port}',
                 'ws_url': 'ws://{hostname}:{port}/websockets',
             },
-            'version': 'v0.6.0'
+            'version': 'v0.8.1'
         } as Config
     }
 }
