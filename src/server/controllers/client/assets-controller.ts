@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import {App} from "../../app";
+import fs from "node:fs";
+import path from "node:path";
+import {App} from "../../app.ts";
 import {Request, Response} from "express"
 
 export default function(req: Request, res: Response) {

@@ -1,13 +1,13 @@
 import express, {Express} from "express";
-import ConfigProvider, { Config } from "./config";
+import ConfigProvider, { Config } from "./config.ts";
 import cors from "cors";
-import api from "./routes/api";
-import web from "./routes/web";
-import path from "path";
-import dotenv from "dotenv";
-import http from "http";
-import websockets from "./websockets";
-import Store from "./store";
+import api from "./routes/api.ts";
+import web from "./routes/web.ts";
+import path from "node:path";
+import "jsr:@std/dotenv/load";
+import http from "node:http";
+import websockets from "./websockets/index.ts";
+import Store from "./store.ts";
 
 interface Process extends NodeJS.Process {
     pkg: any;
@@ -76,22 +76,12 @@ export class App {
 
 export function bootstrap(): App {
 
-    const appDir: string = __dirname;
+    const appDir: string = import.meta.dirname;
 
     let clientDir: string;
     let dotEnvPath: string;
-    if(process.pkg) {
-        dotEnvPath = path.join(process.cwd(), '/.env');
-        clientDir = path.join(appDir, '/../client');
-    }
-    else {
-        dotEnvPath = path.join(__dirname, '../../.env');
-        clientDir = path.join(__dirname, '../../dist/client');
-    }
-
-    dotenv.config({
-        path: dotEnvPath
-    });
+    dotEnvPath = path.join(import.meta.dirname, '../../.env');
+    clientDir = path.join(import.meta.dirname, '../../dist/client');
 
     const app = App.instance();
     console.log("RA2 - UI by wushaolin " + app.config().version);

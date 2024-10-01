@@ -1,7 +1,7 @@
 import {Router} from "express";
-import assetsController from "../controllers/client/assets-controller";
-import appController from "../controllers/client/app-controller";
-import {App} from "../app";
+import assetsController from "../controllers/client/assets-controller.ts";
+import appController from "../controllers/client/app-controller.ts";
+import {App} from "../app.ts";
 
 export default () => {
     const router: Router = Router();

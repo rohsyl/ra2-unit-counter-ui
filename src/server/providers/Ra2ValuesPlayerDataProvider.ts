@@ -1,7 +1,7 @@
-import {DataProvider, PlayerData, SourceReadyResult} from './DataProvider';
-import path from 'path';
-import fs from 'fs';
-import {Config} from "../config";
+import {DataProvider, PlayerData, SourceReadyResult} from './DataProvider.ts';
+import path from 'node:path';
+import fs from 'node:fs';
+import {Config} from "../config.ts";
 
 export default class Ra2ValuesPlayerDataProvider implements DataProvider{
 

@@ -1,11 +1,11 @@
 import {Router} from "express";
-import activePlayersController from "../controllers/api/active-players-controller";
-import playerDataController from "../controllers/api/player-data-controller";
-import metaDataController from "../controllers/api/meta-data-controller";
-import getPlayersControllers from "../controllers/api/v1/get-players-controllers";
-import getScoreController from "../controllers/api/v1/get-score-controller";
-import setScoreController from "../controllers/api/v1/set-score-controller";
-import clearScoreController from "../controllers/api/v1/clear-score-controller";
+import activePlayersController from "../controllers/api/active-players-controller.ts";
+import playerDataController from "../controllers/api/player-data-controller.ts";
+import metaDataController from "../controllers/api/meta-data-controller.ts";
+import getPlayersControllers from "../controllers/api/v1/get-players-controllers.ts";
+import getScoreController from "../controllers/api/v1/get-score-controller.ts";
+import setScoreController from "../controllers/api/v1/set-score-controller.ts";
+import clearScoreController from "../controllers/api/v1/clear-score-controller.ts";
 
 export default () => {
     const router: Router = Router();

@@ -1,18 +1,14 @@
-import {Server} from 'ws';
 import qs from "qs";
-import {App} from "../app";
-import masterHandler from './handlers/master-handler'
-import slaveHandler from './handlers/slave-handler'
+import {App} from "../app.ts";
+import masterHandler from './handlers/master-handler.ts'
+import slaveHandler from './handlers/slave-handler.ts'
 
 
 export default async (expressServer: any) => {
 
-    const websocketServer: Server = new Server({
-        noServer: true,
-        path: "/websockets",
-    });
 
-    expressServer.on("upgrade", (request: any, socket: any, head: any) => {
+
+    /*expressServer.on("upgrade", (request: any, socket: any, head: any) => {
         websocketServer.handleUpgrade(request, socket, head, (websocket: any) => {
             websocketServer.emit("connection", websocket, request);
         });
@@ -74,7 +70,7 @@ export default async (expressServer: any) => {
 
     })
 
-    return websocketServer;
+    return websocketServer;*/
 };
 
 

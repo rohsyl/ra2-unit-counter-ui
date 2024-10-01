@@ -1,5 +1,3 @@
-import {Config} from "../config";
-
 export interface DataProvider {
 
     getPlayerData(color: string): object;

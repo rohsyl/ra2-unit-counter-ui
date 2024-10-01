@@ -16,12 +16,12 @@ export default class ConfigProvider {
     public get(): Config {
         return {
             'server': {
-                'game_dir': process.env.GAME_DIR ?? '.',
-                'hostname': process.env.HOSTNAME ?? 'localhost',
-                'port': process.env.PORT ?? 8080,
+                'game_dir': Deno.env.GAME_DIR ?? '.',
+                'hostname': Deno.env.HOSTNAME ?? 'localhost',
+                'port': Deno.env.PORT ?? 8080,
             },
             'client': {
-                'base_path': process.env.CLIENT_BASE_PATH ?? '/ra2',
+                'base_path': Deno.env.CLIENT_BASE_PATH ?? '/ra2',
                 'api_url': 'http://{hostname}:{port}',
                 'ws_url': 'ws://{hostname}:{port}/websockets',
             },

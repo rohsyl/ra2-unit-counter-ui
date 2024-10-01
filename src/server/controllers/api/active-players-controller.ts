@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
-import Ra2ValuesPlayerDataProvider from "../../providers/Ra2ValuesPlayerDataProvider";
-import {PlayerData} from "../../providers/DataProvider";
-import {App} from "../../app";
+import Ra2ValuesPlayerDataProvider from "../../providers/Ra2ValuesPlayerDataProvider.ts";
+import {PlayerData} from "../../providers/DataProvider.ts";
+import {App} from "../../app.ts";
 
 export default async(req: Request, res: Response) => {
     const provider = new Ra2ValuesPlayerDataProvider(App.instance().config());

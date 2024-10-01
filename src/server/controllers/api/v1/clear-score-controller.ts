@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {App} from "../../../app";
+import {App} from "../../../app.ts";
 
 export default async(req: Request, res: Response) => {
     const data = App.instance().store().get('game');
