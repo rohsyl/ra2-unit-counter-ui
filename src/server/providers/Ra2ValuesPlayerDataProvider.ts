@@ -2,6 +2,10 @@ import {DataProvider, PlayerData, SourceReadyResult} from './DataProvider';
 import path from 'path';
 import fs from 'fs';
 import {Config} from "../config";
+import alliedUnits from './assets/allied';
+import sovietUnits from "./assets/soviet";
+import yuriUnits from "./assets/yuri";
+import countries from "./assets/countries";
 
 export default class Ra2ValuesPlayerDataProvider implements DataProvider{
 
@@ -16,66 +20,6 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         'yellow',
     ]
 
-    private alliedCoutries: string[] = [
-        'America',
-        'Korea',
-        'France',
-        'Germany',
-        'Great Britain',
-    ];
-
-    private sovietCoutries: string[] = [
-        'Libya',
-        'Iraq',
-        'Cuba',
-        'Russia',
-    ];
-
-    private yuriCoutries: string[] = [
-        'Yuri',
-    ];
-
-    private alliedUnits: string[] = [
-        'allieddogs',
-        'alliedminers',
-        'battlefortresses',
-        'gis',
-        'grandcannons',
-        'grizzlies',
-        'ifvs',
-        'mirages',
-        'oils',
-        'prisms',
-        'rocketeers',
-        'warfactories',
-    ];
-
-    private sovietUnits: string[] = [
-        'bunkers',
-        'desolators',
-        'drones',
-        'flaktraks',
-        'conscripts',
-        'kirovs',
-        'oils',
-        'rhinos',
-        'sovietdogs',
-        'sovietminers',
-        'warfactories',
-    ];
-
-    private yuriUnits: string[] = [
-        'brutes',
-        'discs',
-        'gattlings',
-        'lashers',
-        'magnetrons',
-        'masterminds',
-        'warfactories',
-        'yuriminers',
-        'oils',
-    ];
-
     public config: Config;
 
     public constructor(config: Config) {
@@ -84,22 +28,20 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
 
     public getPlayerData(color: string, withUnits: boolean = true): PlayerData {
 
-        const country = this.readPlayerData(color, 'country')
+        const countryName = this.readPlayerData(color, 'country')
 
-        let units: object[] = [];
-        let faction = '';
-        if(this.alliedCoutries.includes(country)) {
-            faction = 'allied';
-            units = withUnits ? this.readUnits(color, this.alliedUnits) : [];
+        const country = countries.find(c => c.name === countryName);
+
+        if(!country) {
+            return {
+                name: '',
+                color: color
+            }
         }
-        else if(this.sovietCoutries.includes(country)) {
-            faction = 'soviet';
-            units = withUnits ? this.readUnits(color, this.sovietUnits) : [];
-        }
-        else {
-            faction = 'yuri';
-            units = withUnits ? this.readUnits(color, this.yuriUnits) : [];
-        }
+
+        let units: UnitItem[] = withUnits
+            ? this.readUnits(color, country.faction)
+            : [];
 
         return {
             'name': this.readPlayerData(color, 'name'),
@@ -107,25 +49,24 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
             'balance': this.readPlayerData(color, 'balance'),
             'power': undefined,
             'is_low_power': this.readPlayerData(color, 'lowpower') == 'LOW POWER',
-            'country': country,
-            'faction': faction,
+            'country': country.name,
+            'faction': country.faction,
             'units': units,
         }
     }
 
     public getMetadata(): object {
-
         return {
             'colors': this.colors,
             'countries': {
-                'allied': this.alliedCoutries,
-                'soviet': this.sovietCoutries,
-                'yuri': this.yuriCoutries,
+                'allied': countries.filter(c => c.faction === 'allied'),
+                'soviet': countries.filter(c => c.faction === 'soviet'),
+                'yuri': countries.filter(c => c.faction === 'yuri'),
             },
             'units': {
-                'allied': this.alliedUnits,
-                'soviet': this.sovietUnits,
-                'yuri': this.yuriUnits,
+                'allied': alliedUnits,
+                'soviet': sovietUnits,
+                'yuri': yuriUnits,
             }
         }
     }
@@ -145,17 +86,32 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         )
     }
 
-    private readUnits(color: string, units: string[]): object[] {
-        const result: object[] = [];
+    private readUnits(color: string, faction: Faction): UnitItem[] {
+        const result: UnitItem[] = [];
+        const units = this.getUnitsByFaction(faction)
+
+        if(!units) return [];
 
         for(const unit of units) {
             result.push({
-                'name': unit,
-                'count': this.readPlayerData(color, unit),
+                ...unit,
+                count: parseInt(this.readPlayerData(color, unit.name)),
             });
         }
 
         return result
+    }
+
+    private getUnitsByFaction(faction: Faction) {
+        if(faction === 'yuri') {
+            return yuriUnits
+        }
+        else if(faction === 'soviet') {
+            return sovietUnits
+        }
+        else if(faction === 'allied') {
+            return alliedUnits
+        }
     }
 
     getActivePlayers(): PlayerData[] {
@@ -166,7 +122,6 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
                 result.push(playerdata);
             }
         }
-
         return result;
     }
 
@@ -201,4 +156,24 @@ export default class Ra2ValuesPlayerDataProvider implements DataProvider{
         };
     }
 
+}
+
+export type Faction = 'yuri' | 'allied' | 'soviet';
+
+export type Country = {
+    name: string,
+    imageUrl: string,
+    faction: Faction,
+    factionImageUrl: string,
+}
+
+export type UnitAsset = {
+    name: string,
+    imageUrl: string,
+    default?: boolean,
+    position?: number,
+}
+
+export type UnitItem = UnitAsset & {
+    count: number,
 }

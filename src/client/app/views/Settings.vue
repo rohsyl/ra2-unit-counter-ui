@@ -29,15 +29,6 @@ onUnmounted(() => {
   unwatch()
 })
 
-function getUnitImg(faction, name) {
-
-  let n = name
-  if(name == 'warfactories'){
-    n = faction + '_' + name
-  }
-  return assetsProvider.getUnitImgSrc(n)
-}
-
 function updateOrder(faction, e) {
   metadataStore.updateMetadataOrder(faction, e)
 }
@@ -92,7 +83,7 @@ function updateOrder(faction, e) {
           <template #item="{ element: unit }">
             <label :for="'allied' + unit.name" style="width: 60px; height: 45px;" class="relative">
               <input type="checkbox" :id="'allied' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
-              <img :src="getUnitImg('allied', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
+              <img :src="assetsProvider.getAssetPath(unit.imageUrl)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
             </label>
           </template>
         </draggable>
@@ -107,7 +98,7 @@ function updateOrder(faction, e) {
           <template #item="{ element: unit }">
             <label :for="'soviet' + unit.name" style="width: 60px; height: 45px;" class="relative">
               <input type="checkbox" :id="'soviet' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
-              <img :src="getUnitImg('soviet', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
+              <img :src="assetsProvider.getAssetPath(unit.imageUrl)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
             </label>
           </template>
         </draggable>
@@ -122,7 +113,7 @@ function updateOrder(faction, e) {
           <template #item="{ element: unit }">
               <label :for="'yuri' + unit.name" style="width: 60px; height: 45px;" class="relative">
                 <input type="checkbox" :id="'yuri' + unit.name" class="absolute bottom-1 left-1" v-model="unit.checked" />
-                <img :src="getUnitImg('yuri', unit.name)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
+                <img :src="assetsProvider.getAssetPath(unit.imageUrl)" :alt="unit.name" class="w-full h-full border-2 border-black rounded" />
               </label>
           </template>
         </draggable>

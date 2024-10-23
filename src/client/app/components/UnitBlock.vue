@@ -18,13 +18,6 @@ const assets = new AssetsProvider()
 
 const { containerDirectionClass, containerTextClass, imageWidth } = initDirection()
 
-const unitImg = computed(() => {
-  let name = props.unit.name;
-  if(props.unit.name == 'warfactories'){
-    name = (props.unit.faction ?? 'soviet') + '_' + props.unit.name
-  }
-  return assets.getUnitImgSrc(name)
-})
 
 function initDirection() {
   let containerDirectionClass = 'flex ';
@@ -46,11 +39,11 @@ function initDirection() {
 </script>
 
 <template>
-  <div class="border-2 p-0.5 pb-0 rounded-lg shadow-lg"
+  <div class="border-2 pb-0 rounded-lg shadow-lg"
        :class="(props.color
       ? props.color.borderClassNames + ' ' + props.color.gradientFromClassNames + ' ' + props.color.gradientToClassNames
       : 'border-gray-700 bg-gradient-to-b from-gray-700 to-white') + ' ' + containerDirectionClass" >
-    <img :src="unitImg" :alt="unit.name" class="rounded-lg" :class="imageWidth"/>
+    <img :src="assets.getAssetPath(unit.imageUrl)" :alt="unit.name" class="rounded-lg" :class="imageWidth"/>
     <p class="text-center text-3xl font-bold text-white"
        :class="containerTextClass">
       {{ props.count }}

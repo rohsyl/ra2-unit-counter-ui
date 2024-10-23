@@ -1,11 +1,11 @@
 import {defineStore} from "pinia";
 import ConfigProvider from "../providers/ConfigProvider";
-import {b} from "vite/dist/node/types.d-aGj9QkWt";
 
 export interface Unit {
     name: string;
     position: number;
-    checked: boolean;
+    default?: boolean;
+    checked?: boolean;
     faction?: string;
 }
 
@@ -15,56 +15,6 @@ interface UnitsContainer {
     yuri: Unit[];
 }
 
-export const defaultAlliedUnits = [
-    "gis",
-    "grizzlies",
-    "ifvs",
-    "mirages",
-    "prisms",
-    "rocketeers",
-    "oils",
-];
-
-export const defaultSovietUnits = [
-    "sovietdogs",
-    "rhinos",
-    "desolators",
-    "drones",
-    "warfactories",
-    "kirovs",
-    "oils",
-];
-
-export const defaultYuriUnits = [
-    "discs",
-    "gattlings",
-    "magnetrons",
-    "masterminds",
-    "warfactories",
-    "yuriminers",
-    "oils",
-];
-
-const factionDefaultsMap = {
-    allied: defaultAlliedUnits,
-    soviet: defaultSovietUnits,
-    yuri: [],
-};
-
-function initDefaultUnits(units: { allied: string[], soviet: string[], yuri: string[] }): UnitsContainer {
-    const result: UnitsContainer = {allied: [], soviet: [], yuri: []};
-    for (const faction in units) {
-        for (const unit of units[faction]) {
-            result[faction].push({
-                name: unit,
-                checked: factionDefaultsMap[faction].includes(unit),
-                position: factionDefaultsMap[faction].indexOf(unit),
-                faction: faction,
-            } as Unit)
-        }
-    }
-    return result;
-}
 
 function sortUnits(a: any, b: any) {
     return a.position - b.position;
@@ -125,15 +75,18 @@ export const useMetadataStore = defineStore('metadata', {
             this.colors = data.colors;
             this.countries = data.countries;
 
-            const defaults: UnitsContainer = initDefaultUnits(data.units);
-            for (const faction in this.units as UnitsContainer) {
-                if(this.units[faction].length === 0) {
-                    this.units[faction] = defaults[faction];
-                }
-                else {
-                    // todo merge defaults with existing units
+            const units = data.units;
+            for(const faction in units) {
+                for(const i in units[faction]) {
+                    const nu = units[faction][i]
+                    const su = this.units[faction].find(u => u.name == nu.name)
+                    units[faction][i].checked = su?.checked ?? nu.default ?? undefined;
+                    units[faction][i].position = su?.position ?? nu.position ?? undefined;
                 }
             }
+            this.$patch({
+                units: units
+            })
             return true
         },
         async updateMetadataOrder(faction: string, e): Promise<boolean> {
