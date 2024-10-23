@@ -5,14 +5,12 @@ import {onMounted, Ref, ref} from "vue";
 import UnitsCounter from "../components/UnitsCounter.vue";
 import {useGameStore, initIsRunning, Player} from "../stores/GameStore";
 import ColorsProvider from "../providers/ColorsProvider";
-import { computed } from 'vue'
 import {storeToRefs} from "pinia";
-import {initFetchValues, useUnitsStore} from "../stores/UnitsStore";
-import {useMetadataStore} from "../stores/MetadataStore";
 import ConfigProvider from "../providers/ConfigProvider";
 import SmallButton from "../components/form/SmallButton.vue";
 import ScoreboadLayout from "../components/ScoreboadLayout.vue";
 import AssetsProvider from "../providers/AssetsProvider";
+import {useSlaveSync} from "../hooks/useSlaveSync";
 
 enum Views {
   Scoreboard = 'scoreboard',
@@ -27,16 +25,15 @@ const isSlave: Ref<boolean> = ref(true)
 const copied: Ref<undefined | string> = ref(undefined)
 const view: Ref<undefined | string> = ref(undefined)
 const userAgent: Ref<string> = ref('')
-let wsConnection: WebSocket
 
 const btnUseViewText = 'Copy URL to use this layout'
 const btnCopiedText = 'Copied to clipboard !'
 const gameStore = useGameStore()
-const metadataStore = useMetadataStore()
-const unitsStore = useUnitsStore()
 const assetProvider = new AssetsProvider()
 
 const { getPlayer1Color, getPlayer2Color } = storeToRefs(gameStore)
+
+const { } = useSlaveSync()
 
 onMounted(() => {
   isSlave.value = route.query.hasOwnProperty('nonav')
@@ -45,46 +42,8 @@ onMounted(() => {
 
   initIsRunning(gameStore)
 
-  if(!isSlave.value) {
-    return
-  }
-
-  connect();
 })
 
-function connect() {
-  console.log('Connecting to websocket...')
-  wsConnection = new WebSocket(ConfigProvider.config.client.ws_url + '?type=slave')
-
-  wsConnection.onopen = () => {
-    console.log('Connected to websocket')
-  }
-
-  wsConnection.onmessage = (message) => {
-    const data = JSON.parse(message.data)
-    if(data.message.action === 'update-store') {
-      if(data.message.store == 'game') {
-        gameStore.$patch(data.message.data)
-      }
-      else if (data.message.store == 'metadata') {
-        metadataStore.$patch(data.message.data)
-      }
-    }
-  }
-
-  wsConnection.onerror = () => {
-    console.log('Connection to websocket failed. Trying again later')
-    wsConnection.close();
-  }
-
-  wsConnection.onclose = () => {
-    console.log('Connection closed')
-    setTimeout(function() {
-      connect();
-    }, 5000);
-  }
-
-}
 
 function useView(view: string) {
 

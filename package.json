@@ -2,6 +2,7 @@
   "name": "ra2-ui",
   "dependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
+    "@vueuse/core": "^11.1.0",
     "commonjs": "^0.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

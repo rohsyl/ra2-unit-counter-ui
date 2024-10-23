@@ -3,32 +3,31 @@ import Nav from "../components/Nav.vue";
 import Card from "../components/Card.vue";
 import {useMetadataStore} from "../stores/MetadataStore";
 import {storeToRefs} from "pinia";
-import {computed, onMounted, onUnmounted, watch} from "vue";
-import MasterSync from "../services/MasterSync";
+import {onMounted, onUnmounted, watch} from "vue";
 import AssetsProvider from "../providers/AssetsProvider";
 import draggable from 'vuedraggable';
+import {useMasterSync} from "../hooks/useMasterSync.ts";
 
 const metadataStore = useMetadataStore()
 const assetsProvider = new AssetsProvider()
 
 const { getAlliedUnits, getSovietUnits, getYuriUnits } = storeToRefs(metadataStore)
+const { syncMetadataStore } = useMasterSync()
 
-let wsConnection = undefined
-
+let unwatch;
 onMounted(() => {
-    wsConnection = new MasterSync()
-    wsConnection.connect()
+  unwatch = watch(
+      metadataStore,
+      () => {
+        syncMetadataStore()
+      },
+      { deep: true }
+  )
 })
+
 onUnmounted(() => {
-  wsConnection.close()
+  unwatch()
 })
-watch(
-    metadataStore,
-    (state) => {
-      wsConnection.syncMetadataStore()
-    },
-    { deep: true }
-)
 
 function getUnitImg(faction, name) {
 

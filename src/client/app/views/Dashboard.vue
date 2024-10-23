@@ -1,59 +1,38 @@
 <script setup>
 import Nav from "../components/Nav.vue";
 import Card from "../components/Card.vue";
-import {useMetadataStore} from "../stores/MetadataStore";
-import {storeToRefs} from "pinia";
-import {onMounted, onUnmounted, ref, watch} from "vue";
+import {onMounted, onUnmounted, watch} from "vue";
 import InputText from "../components/form/InputText.vue";
 import InputLabel from "../components/form/InputLabel.vue";
 import InputHelper from "../components/form/InputHelper.vue";
 import {initIsRunning, useGameStore} from "../stores/GameStore";
 import PlayerControl from "../components/PlayerControl.vue";
 import Button from "../components/form/Button.vue";
-import ConfigProvider from "../providers/ConfigProvider";
-import MasterSync from "../services/MasterSync";
 import TeamControl from "../components/TeamControl.vue";
+import {useMasterSync} from "../hooks/useMasterSync.ts";
 
-const metadataStore = useMetadataStore()
 const gameStore = useGameStore()
 
-const { getCheckedAlliedUnits, getCheckedSovietUnits, getMetadataState } = storeToRefs(metadataStore)
-const prefix = ConfigProvider.config.client.base_path;
+const { syncGameStore } = useMasterSync()
 
-let wsConnection = undefined
 let unwatch;
 
 onMounted(() => {
-  wsConnection = new MasterSync()
-  wsConnection.connect()
-  wsConnection.getWs().onmessage = (message) => {
-    const data = JSON.parse(message.data)
-    if(data.message.action === 'update-store') {
-      unwatch();
-      if(data.message.store === 'game') {
-        gameStore.$patch(data.message.data)
-      }
-      watchGameStore()
-    }
-  }
-
   // poll every x seconds to check if a game is running
   initIsRunning(gameStore)
-  watchGameStore();
-})
-onUnmounted(() => {
-  wsConnection.close()
-})
 
-function watchGameStore() {
   unwatch = watch(
       gameStore,
-      (state) => {
-        wsConnection.syncGameStore()
+      () => {
+        syncGameStore()
       },
       { deep: true }
   )
-}
+})
+
+onUnmounted(() => {
+  unwatch()
+})
 
 
 function resetScore() {
@@ -61,18 +40,6 @@ function resetScore() {
   gameStore.player2.score = 0
   gameStore.team1.score = 0
   gameStore.team2.score = 0
-}
-
-function refreshSlave() {
-  if(wsConnection) {
-    wsConnection.send(JSON.stringify({
-      action: 'message-slaves',
-      message: {
-        action: 'refresh'
-      }
-    }))
-  }
-
 }
 
 function setGameMode(mode) {
