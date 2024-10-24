@@ -29,7 +29,7 @@ function initDirection() {
 </script>
 
 <template>
-  <div class="border-2 p-0.5 pb-0 rounded-lg shadow-lg"
+  <div class="border p-0.5 pb-0 rounded-lg shadow-lg"
        :class="(props.color
       ? props.color.borderClassNames + ' ' +
         props.color.gradientFromClassNames + ' ' +

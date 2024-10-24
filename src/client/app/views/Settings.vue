@@ -6,7 +6,7 @@ import {storeToRefs} from "pinia";
 import {onMounted, onUnmounted, watch} from "vue";
 import AssetsProvider from "../providers/AssetsProvider";
 import draggable from 'vuedraggable';
-import {useMasterSync} from "../hooks/useMasterSync.ts";
+import {useMasterSync} from "../hooks/useMasterSync";
 
 const metadataStore = useMetadataStore()
 const assetsProvider = new AssetsProvider()
@@ -42,7 +42,7 @@ function updateOrder(faction, e) {
     <Card>
       <h1 class="text-2xl font-bold border-b pb-2 mb-4">Settings</h1>
 
-      <!--<div class="mb-6">
+     <div class="mb-6">
         <div class="flex flex-col sm:flex-row">
           <div class="w-full sm:w-1/2 md:w-1/3">
             <h4 class="text-lg font-bold">Generals</h4>
@@ -50,29 +50,39 @@ function updateOrder(faction, e) {
           </div>
           <div class="w-full sm:w-1/2 md:w-2/3 pt-8 px-2">
 
-            <div class="mb-4">
-              <div class="flex items-center gap-2">
-                <input type="checkbox" id="getYuriAsSoviet" v-model="metadataStore.yuriAsSoviet" />
-                <label for="getYuriAsSoviet">Use yuri as Soviet</label>
-              </div>
-              <p class="text-gray-400 text-xs">
-                Yuri is considered as soviet in Blitz.
-              </p>
-            </div>
+            <!--<<div class="mb-4">
+             <div class="flex items-center gap-2">
+               <input type="checkbox" id="getYuriAsSoviet" v-model="metadataStore.yuriAsSoviet" />
+               <label for="getYuriAsSoviet">Use yuri as Soviet</label>
+             </div>
+             <p class="text-gray-400 text-xs">
+               Yuri is considered as soviet in Blitz.
+             </p>
+           </div>-->
+
+           <div class="mb-4">
+             <div class="flex items-center gap-2">
+               <input type="checkbox" id="showFactionIcons" v-model="metadataStore.showFactionIcons" />
+               <label for="showFactionIcons">Show faction / country icons on scoreboard</label>
+             </div>
+             <p class="text-gray-400 text-xs">
+               Check this to show the faction / country icon on the scoreboard
+             </p>
+           </div>
 
             <div class="mb-4">
               <div class="flex items-center gap-2">
-                <input type="checkbox" id="getYuriAsSoviet" v-model="metadataStore.showFactionIcons" />
-                <label for="getYuriAsSoviet">Show faction icons on scoreboard</label>
+                <input type="checkbox" id="hideWhenZero" v-model="metadataStore.hideWhenZero" />
+                <label for="hideWhenZero">Hide unit when count is 0</label>
               </div>
               <p class="text-gray-400 text-xs">
-                Check this to show the faction icon on the scoreboard
+                Check this to hide units from the counter when not present on the battlefield
               </p>
             </div>
 
-          </div>
-        </div>
-      </div>-->
+         </div>
+       </div>
+     </div>
 
 
       <div class="mb-6">

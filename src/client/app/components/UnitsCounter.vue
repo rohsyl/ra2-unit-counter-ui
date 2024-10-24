@@ -7,13 +7,15 @@ import UnitBlock from "./UnitBlock.vue";
 import {useMetadataStore} from "../stores/MetadataStore";
 import Color from "../models/Color";
 import ColoredCard from "./ColoredCard.vue";
+import MoneyIcon from "./icons/MoneyIcon.vue";
+import PowerIcon from "./icons/PowerIcon.vue";
 
 const props = withDefaults(
     defineProps<{
       player: Player,
       color: Color,
-      running: boolean
-      align: 'start' | 'end'
+      running: boolean,
+      align: 'start' | 'end',
       direction: 'row' | 'column'
     }>(), {
       align: 'start',
@@ -102,12 +104,6 @@ function initDirection() {
   }
 }
 
-watch(running, (running) => {
-  if(running) {
-    initFetchValues(unitsStore, gameStore, player.value)
-  }
-})
-
 function getUnitCount(unit: string) {
   return playerData.value.units.find(u => u.name === unit)?.count ?? 0
 }
@@ -116,7 +112,6 @@ function getUnitCount(unit: string) {
 
 <template>
 
-  <Transition name="fade">
     <div v-if="running && player && playerData">
 
       <ColoredCard :color="props.color" :direction="props.direction" class="mb-1">
@@ -125,22 +120,16 @@ function getUnitCount(unit: string) {
             <span class="drop-shadow-lg">
               {{ playerData.balance }}
             </span>
-            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <MoneyIcon :class="iconSize" />
           </div>
           <div v-if="playerData.is_low_power" :class="'flex align-middle gap-2 font-bold text-red-500 animate-pulse ' + powerContainerClass + ' ' + powerDirectionContainerClass">
-            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M11.412 15.655L9.75 21.75l3.745-4.012M9.257 13.5H3.75l2.659-2.849m2.048-2.194L14.25 2.25 12 10.5h8.25l-4.707 5.043M8.457 8.457L3 3m5.457 5.457l7.086 7.086m0 0L21 21" />
-            </svg>
+            <PowerIcon :class="iconSize" />
             <div>
               LOW
             </div>
           </div>
           <div v-else :class="'flex align-middle gap-2 font-bold text-green-300 text-white ' + powerContainerClass + ' ' + powerDirectionContainerClass">
-            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-            </svg>
+            <PowerIcon :class="iconSize" />
             <div>
               OK
             </div>
@@ -148,7 +137,7 @@ function getUnitCount(unit: string) {
         </div>
       </ColoredCard>
 
-      <div :class="'flex gap-1 flex-wrap ' + containerClass + ' ' + containerDirectionClass">
+      <div :class="'flex gap-0.5 flex-wrap ' + containerClass + ' ' + containerDirectionClass">
 
         <UnitBlock v-for="unit in units"
                    :unit="unit"
@@ -168,9 +157,7 @@ function getUnitCount(unit: string) {
       <ColoredCard :color="props.color" :direction="props.direction" class="mb-1">
         <div :class="'flex mt-0 w-full ' + labelsContainerClass + ' ' + labelsDirectionContainerClass">
           <div :class="'flex align-middle gap-2 font-bold text-green-300 text-white ' + powerContainerClass + ' ' + powerDirectionContainerClass">
-            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-            </svg>
+            <PowerIcon :class="iconSize" />
             <div>
               OK
             </div>
@@ -179,9 +166,7 @@ function getUnitCount(unit: string) {
             <span class="drop-shadow-lg">
               0
             </span>
-            <svg class="inline-block" :class="iconSize" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <MoneyIcon :class="iconSize" />
           </div>
         </div>
       </ColoredCard>
@@ -195,7 +180,6 @@ function getUnitCount(unit: string) {
         />
       </div>
     </div>
-  </Transition>
 
 
 </template>

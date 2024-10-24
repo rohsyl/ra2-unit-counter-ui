@@ -9,7 +9,7 @@ import {initIsRunning, useGameStore} from "../stores/GameStore";
 import PlayerControl from "../components/PlayerControl.vue";
 import Button from "../components/form/Button.vue";
 import TeamControl from "../components/TeamControl.vue";
-import {useMasterSync} from "../hooks/useMasterSync.ts";
+import {useMasterSync} from "../hooks/useMasterSync";
 
 const gameStore = useGameStore()
 
@@ -19,7 +19,7 @@ let unwatch;
 
 onMounted(() => {
   // poll every x seconds to check if a game is running
-  initIsRunning(gameStore)
+  //initIsRunning(gameStore)
 
   unwatch = watch(
       gameStore,
@@ -141,27 +141,6 @@ function setGameMode(mode) {
         </div>
       </div>
     </Card>
-
-
-    <!--<Card>
-      <h2 class="text-2xl font-bold mb-2 border-b">
-        Units configurations
-      </h2>
-      <p class="mb-2">
-        Preview of what units will be shown on the layout for each factions. Click here to :
-        <router-link :to="prefix + '/settings'" class="text-blue-700 underline hover:text-blue-400">configure units</router-link>
-      </p>
-      <h4 class="text-xl font-bold mb-2 border-b">
-        Allied units
-        <img :src="prefix + '/assets/factions/allied.webp'" alt="Allied" class="inline-block h-6 mb-1" />
-      </h4>
-      <CheckedUnitPreview :units="getCheckedAlliedUnits" :color="ColorsProvider.getColor('blue')" class="mb-4" />
-      <h4 class="text-xl font-bold mb-2 border-b">
-        Soviet units
-        <img :src="prefix + '/assets/factions/soviet.webp'" alt="Allied" class="inline-block h-6 mb-1" />
-      </h4>
-      <CheckedUnitPreview :units="getCheckedSovietUnits" :color="ColorsProvider.getColor('red')" class="mb-4" />
-    </Card>-->
 
   </div>
 </template>

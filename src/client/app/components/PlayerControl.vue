@@ -2,16 +2,24 @@
 import InputText from "./form/InputText.vue";
 import InputLabel from "./form/InputLabel.vue";
 import InputSelect from "./form/InputSelect.vue";
-import {Player} from "../stores/GameStore";
+import {Player, useGameStore} from "../stores/GameStore";
 import {toRefs} from "vue";
 import ColorsProvider from "../providers/ColorsProvider";
 import Button from "./form/Button.vue";
+import {useMetadataStore} from "../stores/MetadataStore";
+import {storeToRefs} from "pinia";
+import AssetsProvider from "../providers/AssetsProvider";
 
 const props = defineProps<{
   player: Player,
   playerNumber: string
 }>()
 const { player } = toRefs(props)
+
+
+const assets = new AssetsProvider();
+const metadataStore = useMetadataStore()
+const gameStore = useGameStore();
 
 const colors = [{value: '', label: 'Automatic'}].concat(
     Object.values(ColorsProvider.getColors()).map(color => {
@@ -31,6 +39,14 @@ function decrement() {
 <template>
 
   <div>
+
+    <div class="flex justify-center mb-2 gap-1 font-bold text-white rounded-md py-1 border-2 " :class="gameStore.getColor(player)?.solidBackgroundClassNames + ' ' + gameStore.getColor(player)?.borderClassNames">
+      {{ player.name }}
+      <span v-if="player.country && player.faction">
+        <img :src="assets.getAssetPath(metadataStore.getCountry(player.faction, player.country).imageUrl)" :alt="player.country" />
+      </span>
+    </div>
+
     <div class="flex justify-between">
 
       <div>

@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import ConfigProvider from "../providers/ConfigProvider";
 
-export interface Unit {
+export type Unit = {
     name: string;
     position: number;
     default?: boolean;
@@ -9,30 +9,33 @@ export interface Unit {
     faction?: string;
 }
 
-interface UnitsContainer {
+export type UnitsContainer = {
     allied: Unit[];
     soviet: Unit[];
     yuri: Unit[];
 }
 
+export type MetadataStateProps = {
+    colors: string[],
+    countries: object,
+    units: UnitsContainer
+    yuriAsSoviet: boolean,
+    showFactionIcons: boolean,
+    hideWhenZero: boolean,
+}
 
 function sortUnits(a: any, b: any) {
     return a.position - b.position;
 }
 
 export const useMetadataStore = defineStore('metadata', {
-    state: () : {
-        colors: string[],
-        countries: object,
-        units: UnitsContainer
-        yuriAsSoviet: boolean,
-        showFactionIcons: boolean,
-    } => ({
+    state: () : MetadataStateProps => ({
         colors: [],
         countries: {},
         units: {allied: [], soviet: [], yuri: []},
         yuriAsSoviet: true,
         showFactionIcons: true,
+        hideWhenZero: false
     }),
     getters: {
         getAlliedUnits(state): Unit[] {
@@ -50,19 +53,14 @@ export const useMetadataStore = defineStore('metadata', {
         getCheckedSovietUnits(state): Unit[] {
             return state.units.soviet.filter(unit => unit.checked).sort(sortUnits);
         },
-        getMetadataState(state): {
-            colors: string[],
-            countries: object,
-            units: UnitsContainer
-            yuriAsSoviet: boolean,
-            showFactionIcons: boolean,
-        } {
+        getMetadataState(state): MetadataStateProps {
             return {
                 colors: state.colors,
                 countries: state.countries,
                 units: state.units,
                 yuriAsSoviet: state.yuriAsSoviet,
                 showFactionIcons: state.showFactionIcons,
+                hideWhenZero: state.hideWhenZero
             }
         }
     },
@@ -100,7 +98,11 @@ export const useMetadataStore = defineStore('metadata', {
                     this.units[faction][i].position = parseInt(i);
                 }
             }
-        }
+        },
+
+        getCountry(faction: string, name: string): any {
+            return this.countries[faction].find(c => c.name = name);
+        },
     },
     persist: true
 })

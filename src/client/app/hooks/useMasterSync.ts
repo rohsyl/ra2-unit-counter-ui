@@ -1,8 +1,8 @@
 import {useWebSocket} from "@vueuse/core";
-import {useGameStore} from "../stores/GameStore.ts";
-import {useMetadataStore} from "../stores/MetadataStore.ts";
+import {useGameStore} from "../stores/GameStore";
+import {useMetadataStore} from "../stores/MetadataStore";
 import {storeToRefs} from "pinia";
-import ConfigProvider from "../providers/ConfigProvider.ts";
+import ConfigProvider from "../providers/ConfigProvider";
 import {onUnmounted} from "vue";
 
 export const useMasterSync = () => {
@@ -24,6 +24,9 @@ export const useMasterSync = () => {
                 if(data.message.store === 'game') {
                     gameStore.$patch(data.message.data)
                 }
+            }
+            else if (data.message.action == 'active-players') {
+                gameStore.updateActivePlayers(data.message.data);
             }
         }
     })

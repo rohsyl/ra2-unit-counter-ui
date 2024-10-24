@@ -9,6 +9,7 @@ export default class Color {
     public gradientToClassNames?: string;
     public borderClassNames?: string;
     public textClassnames?: string;
+    public solidBackgroundClassNames?: string;
 
     constructor({
         name,
@@ -19,7 +20,8 @@ export default class Color {
         gradientFromClassNames,
         gradientToClassNames,
         borderClassNames,
-                    textClassnames
+                    textClassnames,
+                    solidBackgroundClassNames
     }: {
         name: string,
         label: string,
@@ -30,6 +32,7 @@ export default class Color {
         gradientToClassNames?: string,
         borderClassNames?: string,
         textClassnames?: string,
+        solidBackgroundClassNames?: string
     }) {
         this.name = name;
         this.label = label;
@@ -40,6 +43,11 @@ export default class Color {
         this.gradientToClassNames = gradientToClassNames;
         this.borderClassNames = borderClassNames;
         this.textClassnames = textClassnames;
+        this.solidBackgroundClassNames = solidBackgroundClassNames;
+    }
+
+    public getGradient() {
+        return this.gradientFromClassNames + ' ' + this.gradientToClassNames;
     }
 
     public toOption(): { value: string, label: string } {

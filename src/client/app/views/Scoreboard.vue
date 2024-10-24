@@ -11,6 +11,7 @@ import SmallButton from "../components/form/SmallButton.vue";
 import ScoreboadLayout from "../components/ScoreboadLayout.vue";
 import AssetsProvider from "../providers/AssetsProvider";
 import {useSlaveSync} from "../hooks/useSlaveSync";
+import {useMetadataStore} from "../stores/MetadataStore";
 
 enum Views {
   Scoreboard = 'scoreboard',
@@ -26,9 +27,12 @@ const copied: Ref<undefined | string> = ref(undefined)
 const view: Ref<undefined | string> = ref(undefined)
 const userAgent: Ref<string> = ref('')
 
+const assets = new AssetsProvider();
+
 const btnUseViewText = 'Copy URL to use this layout'
 const btnCopiedText = 'Copied to clipboard !'
 const gameStore = useGameStore()
+const metadataStore = useMetadataStore();
 const assetProvider = new AssetsProvider()
 
 const { getPlayer1Color, getPlayer2Color } = storeToRefs(gameStore)
@@ -40,7 +44,7 @@ onMounted(() => {
   view.value = route.query.view || (isSlave.value ? Views.TopUnitsWithScoreboard : undefined)
   userAgent.value = navigator.userAgent
 
-  initIsRunning(gameStore)
+  //initIsRunning(gameStore)
 
 })
 
@@ -87,23 +91,27 @@ function useView(view: string) {
           <template v-slot:left>
             <div v-if="gameStore.gameMode === '1v1'">
               {{ gameStore.player1.name }}
-              <img v-if="gameStore.player1.faction"
-                   :src="assetProvider.getFactionImgSrc(gameStore.player1.faction)"
-                   class="h-6 float-right" />
+              <img v-if="metadataStore.showFactionIcons && gameStore.player1.faction && gameStore.player1.country"
+                   :alt="gameStore.player1.country"
+                   :src="assets.getAssetPath(metadataStore.getCountry(gameStore.player1.faction, gameStore.player1.country).imageUrl)"
+                   class="h-5 float-right" />
             </div>
             <div v-else>
-              <div>
+              <div class="text-sm">
                 {{ gameStore.team1.name }}
               </div>
-              <div class="text-sm font-bold mt-1">
-                <span v-for="(player, index) in gameStore.team1.players"
+              <div class="text-md font-bold mt-1">
+                <div v-for="(player, index) in gameStore.team1.players"
                       :key="index"
                 >
-                  <template v-if="index > 0">, </template>
                   <span :class="ColorsProvider.getColor(player.color)?.textClassnames">
                   {{ player.name }}
                   </span>
-                </span>
+                  <img v-if="metadataStore.showFactionIcons && player.faction && player.country"
+                       :alt="player.country"
+                       :src="assets.getAssetPath(metadataStore.getCountry(player.faction, player.country).imageUrl)"
+                       class="h-5 inline-block" />
+                </div>
               </div>
 
             </div>
@@ -112,22 +120,27 @@ function useView(view: string) {
           <template v-slot:right>
             <div v-if="gameStore.gameMode === '1v1'">
               {{ gameStore.player2.name }}
-              <img v-if="gameStore.player2.faction"
-                   :src="assetProvider.getFactionImgSrc(gameStore.player2.faction)"
-                   class="h-6 float-left" />
+              <img v-if="metadataStore.showFactionIcons && gameStore.player2.faction && gameStore.player2.country"
+                   :alt="gameStore.player2.country"
+                   :src="assets.getAssetPath(metadataStore.getCountry(gameStore.player2.faction, gameStore.player2.country).imageUrl)"
+                   class="h-5 float-left" />
             </div>
             <div v-else>
-              <div>
+              <div class="text-sm">
                 {{ gameStore.team2.name }}
               </div>
-              <div class="text-sm font-bold mt-1">
-                <span v-for="(player, index) in gameStore.team2.players"
+              <div class="font-bold text-md mt-1">
+                <div v-for="(player, index) in gameStore.team2.players"
                       :key="player.index">
-                  <template v-if="index > 0">, </template>
-                  <span :class="ColorsProvider.getColor(player.color)?.textClassnames">
-                  {{ player.name }}
+                    <img v-if="metadataStore.showFactionIcons && player.faction && player.country"
+                         :alt="player.country"
+                         :src="assets.getAssetPath(metadataStore.getCountry(player.faction, player.country).imageUrl)"
+                         class="h-5 inline-block" />
+                    <span :class="ColorsProvider.getColor(player.color)?.textClassnames">
+
+                    {{ player.name }}
                   </span>
-                </span>
+                </div>
               </div>
             </div>
           </template>
@@ -169,7 +182,7 @@ function useView(view: string) {
     </h1>
     <div v-if="!view || view === Views.VerticalDualPlayerUnits">
 
-      <div v-if="gameStore.gameMode === '1v1'" class="flex gap-1">
+      <div v-if="gameStore.gameMode === '1v1'" class="flex gap-0.5">
         <div>
           <UnitsCounter :running="gameStore.gameRunning" :player="gameStore.player1" :color="getPlayer1Color" align="start" direction="column" />
         </div>

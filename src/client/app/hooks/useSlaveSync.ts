@@ -7,6 +7,7 @@ import {onUnmounted} from "vue";
 
 export const useSlaveSync = () => {
 
+    const unitsStore = useUnitsStore();
     const gameStore = useGameStore()
     const metadataStore = useMetadataStore()
 
@@ -24,6 +25,12 @@ export const useSlaveSync = () => {
                 else if (data.message.store == 'metadata') {
                     metadataStore.$patch(data.message.data)
                 }
+                else if (data.message.store == 'units') {
+                    unitsStore.$patch(data.message.data)
+                }
+            }
+            else if (data.message.action == 'active-players') {
+                gameStore.updateActivePlayers(data.message.data);
             }
         },
         onConnected: () => {

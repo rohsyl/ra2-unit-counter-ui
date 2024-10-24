@@ -8,12 +8,24 @@ export interface Player {
     color: string;
     score: number;
     faction?: string;
+    country?: string;
 }
 
 export interface Team {
     name: string;
     players: Player[];
     score: number;
+}
+
+export type GameStoreProps = {
+    player1: Player,
+    player2: Player,
+    team1?: Team,
+    team2?: Team,
+    gameFormat: string,
+    gameMode: string,
+    error?: string,
+    gameRunning: boolean,
 }
 
 export function initIsRunning(gameStore: any) {
@@ -55,16 +67,7 @@ function initTeam(team: Team|undefined, size: number): Team {
 }
 
 export const useGameStore = defineStore('game', {
-    state: () : {
-        player1: Player,
-        player2: Player,
-        team1?: Team,
-        team2?: Team,
-        gameFormat: string,
-        gameMode: string,
-        error?: string,
-        gameRunning: boolean,
-    } => ({
+    state: () : GameStoreProps => ({
         player1: {
             name: '',
             color: '',
@@ -93,7 +96,7 @@ export const useGameStore = defineStore('game', {
         gameRunning: false,
     }),
     getters: {
-        getState(): { player1: Player, player2: Player, team1?: Team, team2?: Team, gameFormat: string, gameMode: string } {
+        getState(): GameStoreProps {
             return {
                 player1: this.player1,
                 player2: this.player2,
@@ -126,24 +129,47 @@ export const useGameStore = defineStore('game', {
             }
             else {
                 this.error = undefined;
-                this.gameRunning = data.is_game_running;
+                this.updateActivePlayers(data)
+            }
 
-                if(this.gameRunning) {
+
+        },
+
+        updateActivePlayers(data) {
+            this.gameRunning = data.is_game_running;
+
+            if(this.gameRunning) {
+
+                if(this.gameMode === '1v1') {
+
                     let p1: any = data.players.find((p: any) => p.name === this.player1.name)
                     if(p1) {
                         this.player1.color = p1.color;
                         this.player1.faction = p1.faction;
+                        this.player1.country = p1.country;
                     }
                     let p2: any = data.players.find((p: any) => p.name === this.player2.name)
                     if(p2) {
                         this.player2.color = p2.color;
                         this.player2.faction = p2.faction;
+                        this.player2.country = p2.country;
+                    }
+                }
+                else if(this.gameMode === '2v2') {
+                    for(const player of this.team1.players) {
+                        const _p = data.players.find((p: any) => p.name === player.name)
+                        player.faction = _p?.faction;
+                        player.country = _p?.country;
+                    }
+                    for(const player of this.team2.players) {
+                        const _p = data.players.find((p: any) => p.name === player.name)
+                        player.faction = _p?.faction;
+                        player.country = _p?.country;
                     }
                 }
             }
-
-
         },
+
         async fetchPlayerUnits(player: Player) {
             const response = await fetch(ConfigProvider.config.client.api_url + 'playerdata/' + player.color);
         },

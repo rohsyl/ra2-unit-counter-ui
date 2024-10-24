@@ -3,10 +3,13 @@ import qs from "qs";
 import {App} from "../app";
 import masterHandler from './handlers/master-handler'
 import slaveHandler from './handlers/slave-handler'
+import Ra2ValuesPlayerDataProvider from "../providers/Ra2ValuesPlayerDataProvider";
+import {PlayerData} from "../providers/DataProvider";
 
 
 export default async (expressServer: any) => {
 
+    const provider = new Ra2ValuesPlayerDataProvider(App.instance().config());
     const websocketServer: Server = new Server({
         noServer: true,
         path: "/websockets",
@@ -47,6 +50,45 @@ export default async (expressServer: any) => {
 
         }
     );
+
+    // send units stats to slaves by interval
+    setInterval(() => {
+        const activePlayers = provider.getActivePlayers()
+        const message: Record<string, PlayerData> = {}
+
+        for(const player of activePlayers) {
+            message[player.color] = provider.getPlayerData(player.color)
+        }
+
+        for(const slave of App.instance().slaveConnections) {
+            slave.send(JSON.stringify({
+                message: {
+                    action: 'update-store',
+                    store: 'units',
+                    data: { players: message }
+                }
+            }));
+        }
+    }, 1000);
+
+    setInterval(() => {
+        const activePlayers = provider.getActivePlayers()
+        const data = {
+            message: {
+                action: 'active-players',
+                data: {
+                    is_game_running: activePlayers.length > 0,
+                    players: activePlayers
+                }
+            }
+        }
+        App.instance().masterConnection?.send(JSON.stringify(data))
+        for(const slave of App.instance().slaveConnections) {
+            slave.send(JSON.stringify(data));
+        }
+
+
+    }, 5000)
 
     App.instance().store().on('updated', (storeName: string, storeData: any, emitter: string) => {
 

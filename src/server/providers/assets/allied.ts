@@ -63,6 +63,14 @@ const alliedUnits: UnitAsset[] = [
         name: 'warfactories',
         imageUrl: '/assets/units/allied_warfactories.png'
     },
+    {
+        name: 'prismtowers',
+        imageUrl: '/assets/units/prismtowers.png'
+    },
+    {
+        name: 'blitzafcs',
+        imageUrl: '/assets/units/blitzafcs.png'
+    },
 ]
 
 export default alliedUnits;

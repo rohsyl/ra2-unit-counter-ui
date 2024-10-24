@@ -2,7 +2,7 @@
 
 import AssetsProvider from "../providers/AssetsProvider";
 import Color from "../models/Color";
-import {computed} from "vue";
+import {useMetadataStore} from "../stores/MetadataStore";
 
 const props = withDefaults(
     defineProps<{
@@ -15,12 +15,12 @@ const props = withDefaults(
     });
 
 const assets = new AssetsProvider()
+const metadataStore = useMetadataStore()
 
 const { containerDirectionClass, containerTextClass, imageWidth } = initDirection()
 
-
 function initDirection() {
-  let containerDirectionClass = 'flex ';
+  let containerDirectionClass = 'flex items-center ';
   let containerTextClass = '';
   let imageWidth = ''
   if(props.direction === 'row') {
@@ -31,7 +31,7 @@ function initDirection() {
   else if(props.direction === 'column') {
     containerDirectionClass += 'bg-gradient-to-r flex-row w-[120px] '
     containerTextClass = ' text-right pr-2 text-right flex-grow  '
-    imageWidth = ' w-[50px]'
+    imageWidth = ' w-[58px]'
   }
   return { containerDirectionClass, containerTextClass, imageWidth }
 }
@@ -39,7 +39,8 @@ function initDirection() {
 </script>
 
 <template>
-  <div class="border-2 pb-0 rounded-lg shadow-lg"
+  <div class="border pb-0 rounded-lg shadow-lg"
+       v-if="!metadataStore.hideWhenZero || count > 0"
        :class="(props.color
       ? props.color.borderClassNames + ' ' + props.color.gradientFromClassNames + ' ' + props.color.gradientToClassNames
       : 'border-gray-700 bg-gradient-to-b from-gray-700 to-white') + ' ' + containerDirectionClass" >
